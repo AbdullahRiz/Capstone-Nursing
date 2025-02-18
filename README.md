@@ -25,6 +25,14 @@ http://localhost:3000 --> Frontend
 http://localhost:8080 --> Backend
 ```
 
+## Building
+Run this to package our frontend and backend code
+```
+mvn package
+```
+
+For local live development, instead of packaging just use port 3000.
+
 ## Tests
 These commands help with running tests
 ```
