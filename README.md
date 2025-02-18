@@ -1,3 +1,33 @@
 # Capstone-Nursing
 
 This project will help nurses find jobs and hospitals fill their operational gaps.
+
+## How to run
+After cloning this repository go into `/nursing-system` and run the following:
+
+```angular2html
+mvn clean install
+mvn spring-boot:run
+```
+
+First time setting up the frontend:
+```angular2html
+cd src/main/frontend
+npm install
+npm start
+```
+
+Preferable to run this project in IntelliJ, they have Spring Boot support.
+Navigate to the `NursingSystemApplication.kt` file and select the green triangle to run.
+This is already ported so that both ports forward to the frontend:
+```angular2html
+http://localhost:3000 --> Frontend
+http://localhost:8080 --> Backend
+```
+
+## Tests
+These commands help with running tests
+```
+mvn test --> run all tests
+mvn jacoco:report --> test coverage
+```

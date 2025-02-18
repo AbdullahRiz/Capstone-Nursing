@@ -1,0 +1,59 @@
+### General ###
+*.log
+*.out
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+*.swp
+.DS_Store
+.idea/
+.vscode/
+*.bak
+*.orig
+node_modules/
+
+### IntelliJ / Eclipse ###
+/*.ipr
+/.classpath
+/.project
+/.settings/
+*.iws
+
+### Maven ###
+/target/
+mvnw
+mvnw.cmd
+
+### Gradle ###
+/build/
+.gradle/
+!gradle-wrapper.jar
+
+### Spring Boot ###
+/bin/
+logs/
+*.pid
+*.gz
+hs_err_pid*
+
+### React (Frontend) ###
+/src/main/frontend/node_modules/
+/src/main/frontend/node/node_modules
+/src/main/frontend/build/
+/src/main/frontend/.env.local
+/src/main/frontend/.cache/
+/src/main/frontend/yarn-error.log
+/src/main/frontend/npm-debug.log
+/src/main/frontend/.parcel-cache/
+
+### Environment & Secrets ###
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+/config/application.properties
+/config/application.yml
+/secrets/
