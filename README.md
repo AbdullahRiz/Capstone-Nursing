@@ -6,8 +6,8 @@ This project will help nurses find jobs and hospitals fill their operational gap
 After cloning this repository go into `/nursing-system` and run the following:
 
 ```angular2html
-mvn clean install
-mvn spring-boot:run
+.\mvnw clean install
+.\mvnw spring-boot:run
 ```
 
 First time setting up the frontend:
@@ -28,7 +28,7 @@ http://localhost:8080 --> Backend
 ## Building
 Run this to package our frontend and backend code
 ```
-mvn package
+.\mvnw package
 ```
 
 For local live development, instead of packaging just use port 3000.
@@ -36,6 +36,6 @@ For local live development, instead of packaging just use port 3000.
 ## Tests
 These commands help with running tests
 ```
-mvn test --> run all tests
-mvn jacoco:report --> test coverage
+.\mvnw test --> run all tests
+.\mvnw jacoco:report --> test coverage
 ```
