@@ -21,11 +21,6 @@ node_modules/
 /.settings/
 *.iws
 
-### Maven ###
-/target/
-mvnw
-mvnw.cmd
-
 ### Gradle ###
 /build/
 .gradle/
