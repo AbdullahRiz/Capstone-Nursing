@@ -8,5 +8,10 @@ data class User(
     @Id val id: String? = null,
     val email: String,
     val password: String,
-    val name: String? = null
+    val name: String? = null,
+    val role: Role
 )
+
+enum class Role {
+    NURSE, HOSPITAL
+}
