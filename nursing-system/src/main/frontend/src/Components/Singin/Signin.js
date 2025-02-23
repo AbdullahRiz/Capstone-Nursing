@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import "../Signup/signup.css";
+import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import Dummy from "../Home/Dummy"
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +12,7 @@ const SignIn = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const toggleShowPassword = () => {
     setShowPassword((prevState) => !prevState);
@@ -38,7 +41,7 @@ const SignIn = () => {
       alert("Sign In Successful!");
     } catch (error) {
       console.error("Error during fetch:", error);
-      alert(`Sign In failed: ${error.message}`);
+      // alert(`Sign In failed: ${error.message}`);
     }
   };
 
@@ -90,7 +93,7 @@ const SignIn = () => {
             </div>
           </div>
 
-          <button type="submit" className="signup-button1">
+          <button type="submit" className="signup-button1" onClick={() => navigate("/Dummy")}>
             Sign In
           </button>
         </form>

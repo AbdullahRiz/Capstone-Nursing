@@ -1,15 +1,14 @@
 import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom"; // ✅ Keep only useNavigate, remove Router
+import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Home.css";
 import nurseImage from "../../Assets/viki-mohamad-hYcSP6SpoK0-unsplash.jpg";
 import nurse from "../../Assets/national-cancer-institute-701-FJcjLAQ-unsplash 2.jpg";
 import hospital from "../../Assets/branimir-balogovic-fAiQRv7FgE0-unsplash.jpg";
 import Footer from "../Footer/Footer";
-import Header from "../Header/Header";
 
 const Home = () => {
-  const navigate = useNavigate(); // ✅ useNavigate now works correctly
+  const navigate = useNavigate();
 
   useEffect(() => {
     const sections = document.querySelectorAll(".scroll-section, .hospital");
@@ -48,8 +47,13 @@ const Home = () => {
             <div className="mission-text">
               <h2>Our Mission</h2>
               <p>
-                Our mission is to revolutionize healthcare staffing by
-                connecting travel nurses with hospitals seamlessly...
+                Our mission is to revolutionize healthcare staffing by connecting travel nurses with hospitals
+                seamlessly. We provide a user-friendly platform where nurses can find opportunities that match
+                their certifications, schedule, and location, while hospitals can efficiently hire qualified
+                professionals to meet their staffing needs. By streamlining the hiring process, we aim to
+                enhance workforce flexibility, reduce staffing shortages, and improve patient care. Our
+                commitment is to empower healthcare professionals with greater career mobility and ensure
+                hospitals have access to top-tier talent when they need it most.
               </p>
             </div>
           </div>
@@ -116,8 +120,8 @@ const Home = () => {
           </div>
         </div>
 
-        <Footer />
       </div>
+      <Footer />
     </>
   );
 };
