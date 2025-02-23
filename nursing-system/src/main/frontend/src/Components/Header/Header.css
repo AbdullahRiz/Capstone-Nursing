@@ -1,0 +1,98 @@
+.header {
+    background: linear-gradient(to right, #a8d0e6, #669bbc);
+    padding: 0.7rem ;
+    box-shadow: 0px 4px 6px rgb(255, 255, 255);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.2rem;
+}
+
+.navbar-brand {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "Inter", sans-serif;
+}
+.navbar-brand:hover{
+    color: #f8f9fa !important;
+}
+
+/* Centered Navigation Bar */
+.nav-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.navbar-nav {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.nav-item {
+    margin: 0 15px;
+    font-family: "Inter", sans-serif;
+}
+
+
+.nav-link {
+    font-size: 1.1rem;
+    color: white !important;
+    transition: color 0.3s ease-in-out;
+}
+
+
+
+/* Account Icon */
+.account-container {
+    display: flex;
+    align-items: center;
+}
+
+.account-link {
+    color: white !important;
+    font-size: 1.2rem;
+}
+
+.account-link i {
+    margin-left: 5px;
+    font-size: 2.3rem;
+}
+
+/* Mobile Menu */
+@media (max-width: 991px) {
+    .navbar-toggler {
+        border: none;
+    }
+
+    .navbar-toggler-icon {
+        background-color: white;
+        border-radius: 3px;
+    }
+
+    .nav-container {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .navbar-nav {
+        text-align: center;
+        padding: 1rem;
+    }
+}

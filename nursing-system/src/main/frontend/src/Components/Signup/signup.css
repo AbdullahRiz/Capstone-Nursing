@@ -1,0 +1,137 @@
+/* Signup Container */
+.signup-container {
+  max-width: 500px;
+  margin: 3rem auto; 
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  align-items: center;
+}
+
+/* Title */
+.signup-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Form Group */
+.signup-form .form-group {
+  margin-bottom: 1.2rem;
+}
+
+/* Labels */
+.signup-form .form-group label {
+  font-weight: bold;
+}
+
+/* Input Fields */
+.signup-form .form-control {
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+/* Fix Role Selection Layout */
+.role-selection {
+  margin: 1rem 0;
+}
+
+/* Role Label */
+.role-label {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Role Options: Add Proper Spacing */
+.role-options {
+  display: flex;
+  justify-content: space-around;
+  gap: 15px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Role Radio Buttons */
+.role-options label {
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+/* Signup Button */
+.signup-button1 {
+  display: block; 
+  margin: 1rem auto;
+  padding: 0.75rem 2rem; 
+  width: 90%; 
+  text-align: center;
+  font-size: 1.3rem; 
+  font-weight: bold;
+  letter-spacing: 1px; 
+  border-radius: 8px; 
+  background: linear-gradient(135deg, #e9c01f, #d4a617);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.signup-button:hover {
+  background-color: #d4a617;
+  transform: scale(1.05);
+}
+
+/* Select Dropdown Styling */
+.form-control {
+  width: 90%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+/* Password Toggle Button Styling */
+.password-input {
+  padding-right: 45px; /* Prevents text from overlapping the icon */
+}
+
+/* Position the eye icon inside the input field */
+.input-group-append {
+  border-radius: 5px;
+  font-size: 1rem;
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+
+}
+
+/* Styling for the eye button */
+.password-toggle-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 10px;
+}
+
+/* Default eye icon color */
+.password-toggle-btn i {
+  font-size: 1.2rem;
+  color: #6c757d;
+}
+
+/* Change color when hovered */
+.password-toggle-btn:hover i {
+  color: #333;
+}
