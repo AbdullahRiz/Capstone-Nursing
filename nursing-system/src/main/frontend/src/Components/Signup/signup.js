@@ -23,11 +23,12 @@ const Signup = () => {
       email: formData.email,
       password: formData.password,
       name: formData.name,
+      role: "NURSE"
     };
 
     console.log("Form Data Submitted:", bodyData);
 
-    await fetch("http://localhost:8080/api/signup/nurse", {
+    const response = await fetch("http://localhost:8080/api/signup/nurse", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(bodyData),

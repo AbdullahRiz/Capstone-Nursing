@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -40,26 +41,22 @@ class LoginController(@Autowired val userService: UserService) {
 class SignupController(@Autowired val userService: UserService) {
 
     @PutMapping("/nurse")
-    fun nurseSignup(
-        @RequestParam email: String,
-        @RequestParam password: String,
-        @RequestParam(required = false) name: String?
-    ): ResponseEntity<String> {
-        userService.findByEmail(email)?.let {
+    fun nurseSignup(@RequestBody user: User): ResponseEntity<String> {
+        userService.findByEmail(user.email)?.let {
             return ResponseEntity.ok("E-Mail address already exists!")
         }
 
         val bcrypt = BCryptPasswordEncoder()
 
         try {
-            val hashedPw = bcrypt.encode(password)
-            val user = User(
-                email = email,
+            val hashedPw = bcrypt.encode(user.password)
+            val newUser = User(
+                email = user.email,
                 password = hashedPw,
-                name = name,
+                name = user.name,
                 role = Role.NURSE
             )
-            userService.create(user)
+            userService.create(newUser)
             return ResponseEntity.status(201).body("User creation successful!")
         } catch (e: Exception) {
             return ResponseEntity.internalServerError().body(e.message.toString())
@@ -67,22 +64,18 @@ class SignupController(@Autowired val userService: UserService) {
     }
 
     @PutMapping("/hospital")
-    fun hospitalSignup(
-        @RequestParam email: String,
-        @RequestParam password: String,
-        @RequestParam(required = false) name: String?
-    ): ResponseEntity<String> {
+    fun hospitalSignup(@RequestBody user: User): ResponseEntity<String> {
         val bcrypt = BCryptPasswordEncoder()
 
         try {
-            val hashedPw = bcrypt.encode(password)
-            val user = User(
-                email = email,
+            val hashedPw = bcrypt.encode(user.password)
+            val newUser = User(
+                email = user.email,
                 password = hashedPw,
-                name = name,
+                name = user.name,
                 role = Role.HOSPITAL
             )
-            userService.create(user)
+            userService.create(newUser)
             return ResponseEntity.status(201).body("User creation successful!")
         } catch (e: Exception) {
             return ResponseEntity.internalServerError().body(e.message.toString())
