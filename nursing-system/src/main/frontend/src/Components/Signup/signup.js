@@ -4,13 +4,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const Signup = () => {
+  const [selectedRole, setSelectedRole] = useState(""); // Local state for role selection
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
+    role: selectedRole === "Nurse" ? "NURSE" : "HOSPITAL"
   });
 
-  const [selectedRole, setSelectedRole] = useState(""); // Local state for role selection
   const [showPassword, setShowPassword] = useState(false);
 
   const toggleShowPassword = () => {
@@ -20,22 +21,30 @@ const Signup = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const bodyData = {
+      name: formData.name,
       email: formData.email,
       password: formData.password,
-      name: formData.name,
-      role: "NURSE"
+      role: selectedRole === "Nurse" ? "NURSE" : "HOSPITAL"
     };
 
     console.log("Form Data Submitted:", bodyData);
 
-    const response = await fetch("http://localhost:8080/api/signup/nurse", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(bodyData),
-    });
+    try {
+      const response = await fetch(`http://localhost:8080/api/signup/${selectedRole.toLowerCase()}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bodyData),
+      });
 
-    // console.log("Form Data Submitted:", bodyData);
-    alert(`Signup Successful!`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      alert(`Signup Successful!`);
+    } catch (error) {
+      console.error("Error during fetch:", error);
+      alert(`Signup failed: ${error.message}`);
+    }
   };
 
   const handleChange = (event) => {
