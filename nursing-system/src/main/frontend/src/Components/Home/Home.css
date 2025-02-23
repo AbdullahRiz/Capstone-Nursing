@@ -1,0 +1,326 @@
+/* Home Container */
+.home-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Full-Screen First Image */
+.full-screen {
+    width: 100%;
+    height: 89.8vh; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Image Container for Overlay Effect */
+.image-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.nurse-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80%; 
+    height: 100%;
+    background: linear-gradient(to left, rgba(0, 0.8, 0.9, 1), transparent); 
+    pointer-events: none
+}
+
+.overlay1 {
+    position: absolute;
+    top: 0;
+    left: 0%;
+    width: 80%; 
+    height: 100%;
+    background: linear-gradient(to right, rgba(1, 1, 1, 1), transparent); 
+    pointer-events: none
+}
+
+.mission-text {
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    transform: translateY(-50%);
+    color: white;
+    width: 40%;
+    font-size: 1.2rem;
+    text-align: left;
+    font-weight: 400;
+    font-family: 'San Francisco';
+    text-align: justify;
+}
+
+.mission-text h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Responsive for Mobile */
+@media (max-width: 768px) {
+    .overlay {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.6);
+    }
+
+    .mission-text {
+        width: 90%;
+        text-align: center;
+        right: 50%;
+        transform: translate(50%, -50%);
+    }
+
+    .mission-text h2 {
+        font-size: 1.8rem;
+    }
+
+    .mission-text p {
+        font-size: 1rem;
+    }
+}
+
+.scroll-section {
+    width: 100%;
+    height: 50dvh; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+}
+
+.hospital {
+    width: 100%;
+    height: 50dvh; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+}
+
+.scroll-section.visible, .hospital.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+.scroll-section:not(.visible), .hospital:not(.visible) {
+    opacity: 0;
+    transform: translateY(50px); 
+}
+
+.scroll-section img, .hospital img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.benefits-text {
+    position: absolute;
+    top: 40%;
+    right: 0rem;
+    transform: translateY(-50%);
+    color: white;
+    width: 25%;
+    font-size: 1.2rem;
+    font-family: "Inter", sans-serif;
+    line-height: 1.6;
+}
+
+.benefits-text h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.benefits-text ul {
+    list-style: none;
+    padding: 0;
+}
+
+.benefits-text li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.benefits-text li::before {
+    color: #ffdd57;
+    font-size: 1.5rem;
+    position: absolute;
+    left: 0;
+    top: 5px;
+}
+
+
+/* Hospital Section */
+.hospital {
+    width: 100%;
+    height: 50.9vh; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 0;
+    z-index: 1;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out, visibility 1s ease-in-out;
+}
+
+/* Make hospital section visible on scroll */
+.hospital.visible {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+/* Hospital Image Styling */
+.hospital-image-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.hospital-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Dark Overlay for Readability */
+.hospital-image-container .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); 
+}
+
+/* Hospital Benefits Text Styling */
+.hospital-benefits-text {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    transform: translateY(-50%);
+    color: white;
+    width: 40%;
+    font-size: 1.2rem;
+    font-family: "Inter", sans-serif;
+    line-height: 1.6;
+}
+
+.hospital-benefits-text h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.hospital-benefits-text ul {
+    list-style: none;
+    padding: 0;
+}
+
+.hospital-benefits-text li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+}
+
+/* Custom Bullet Points */
+.hospital-benefits-text li::before {
+    color: #ffdd57;
+    font-size: 1.5rem;
+    position: absolute;
+    left: 0;
+    top: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hospital-benefits-text {
+        width: 80%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    .hospital-benefits-text h2 {
+        font-size: 1.8rem;
+    }
+
+    .hospital-benefits-text li {
+        font-size: 1rem;
+    }
+}
+
+
+/* Improved Button Styling */
+.signup-button {
+    padding: 10px 20px;  
+    font-size: 1.2rem; 
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #e9c01f 0%, #d4a617 100%);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    text-decoration: none;
+    max-width: 160px;
+    margin: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Hover Effect */
+.signup-button:hover {
+    background: linear-gradient(135deg, #f0d354 0%, #c99b12 100%);
+    transform: scale(1.05); 
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+
+
+
+/* Remove default bullets */
+.styled-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Style list items */
+.styled-list li {
+    display: flex;
+    align-items: center; 
+    font-size: 1.2rem;
+    color: white; 
+    margin-bottom: 10px;
+}
+
+/* Style the bullet icon */
+.styled-list li i {
+    color: #ffdd57; 
+    font-size: 1.1rem;
+    margin-right: 12px; 
+}
