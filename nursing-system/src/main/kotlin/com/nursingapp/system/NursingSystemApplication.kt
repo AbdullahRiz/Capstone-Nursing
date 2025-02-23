@@ -4,12 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry
-import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer
-import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
@@ -33,7 +29,6 @@ class SecurityConfig {
 				auth.anyRequest().permitAll()
 			}
 			.csrf { csrf -> csrf.disable() } // Disable CSRF if not needed for APIs
-//			.cors { cors -> cors.disable() }
 		return http.build()
 	}
 }
