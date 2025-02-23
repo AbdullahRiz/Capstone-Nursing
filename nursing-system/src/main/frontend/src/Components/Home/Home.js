@@ -66,17 +66,20 @@ const Home = () => {
             <h2>Nurse Benefits</h2>
             <ul className="styled-list">
               <li>
-                <i className="bi bi-circle-fill"></i> Flexible Job Opportunities
+                <i className="bi bi-circle-fill"></i>
+                Flexible Job Opportunities
               </li>
               <li>
-                <i className="bi bi-circle-fill"></i> Direct Hospital Hiring
+                <i className="bi bi-circle-fill"></i>
+                Direct Hospital Hiring
               </li>
               <li>
-                <i className="bi bi-circle-fill"></i> Personalized Matching
+                <i className="bi bi-circle-fill"></i>
+                Personalized Matching
               </li>
               <li>
-                <i className="bi bi-circle-fill"></i> Streamlined Application
-                Process
+                <i className="bi bi-circle-fill"></i>
+                Streamlined Application Process
               </li>
             </ul>
             <br />
@@ -96,18 +99,20 @@ const Home = () => {
             <h2>Hospital Benefits</h2>
             <ul className="styled-list">
               <li>
-                <i className="bi bi-circle-fill"></i> Access to Qualified Nurses
+                <i className="bi bi-circle-fill"></i>
+                Access to Qualified Nurses
               </li>
               <li>
-                <i className="bi bi-circle-fill"></i> Efficient Hiring Process
+                <i className="bi bi-circle-fill"></i>
+                Efficient Hiring Process
               </li>
               <li>
-                <i className="bi bi-circle-fill"></i> Real-Time Nurse
-                Availability
+                <i className="bi bi-circle-fill"></i>
+                Real-Time Nurse Availability
               </li>
               <li>
-                <i className="bi bi-circle-fill"></i> Custom Job Posting &
-                Filtering
+                <i className="bi bi-circle-fill"></i>
+                Custom Job Posting & Filtering
               </li>
             </ul>
             <br />
