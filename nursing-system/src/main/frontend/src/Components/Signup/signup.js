@@ -30,7 +30,7 @@ const Signup = () => {
     console.log("Form Data Submitted:", bodyData);
 
     try {
-      const response = await fetch(`http://localhost:8080/api/signup/${selectedRole.toLowerCase()}`, {
+      const response = await fetch("http://localhost:8080/api/signup", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bodyData),
