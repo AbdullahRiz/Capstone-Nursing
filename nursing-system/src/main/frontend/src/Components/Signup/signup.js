@@ -83,26 +83,24 @@ const Signup = () => {
             />
           </div>
 
-          <div className="container mt-4">
-            <div className="form-group">
-              <label>Password</label>
-              <div className="input-group">
-                <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    className="form-control password-input"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                />
-                <div className="input-group-append">
-                <span
-                    className="input-group-text password-toggle-btn"
-                    onClick={toggleShowPassword}
-                >
-                  <i className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
-                </span>
-                </div>
+          <div className="form-group">
+            <label>Password</label>
+            <div className="input-group">
+              <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  className="form-control password-input"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+              />
+              <div className="input-group-append">
+              <span
+                className="input-group-text password-toggle-btn"
+                  onClick={toggleShowPassword}
+              >
+                <i className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+              </span>
               </div>
             </div>
           </div>

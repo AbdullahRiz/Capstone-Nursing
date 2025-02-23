@@ -28,7 +28,7 @@ const SignIn = () => {
     console.log("Sign In Data Submitted:", bodyData);
 
     try {
-      const response = await fetch("http://localhost:8080/api/signin", {
+      const response = await fetch("http://localhost:8080/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bodyData),
@@ -39,9 +39,10 @@ const SignIn = () => {
       }
 
       alert("Sign In Successful!");
+      navigate("/Dummy");
     } catch (error) {
       console.error("Error during fetch:", error);
-      // alert(`Sign In failed: ${error.message}`);
+      alert(`Sign In failed: ${error.message}`);
     }
   };
 
@@ -69,31 +70,29 @@ const SignIn = () => {
             />
           </div>
 
-          <div className="container mt-4">
-            <div className="form-group">
-              <label>Password</label>
-              <div className="input-group">
-                <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    className="form-control password-input"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                />
-                <div className="input-group-append">
-                <span
-                    className="input-group-text password-toggle-btn"
-                    onClick={toggleShowPassword}
-                >
-                  <i className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
-                </span>
-                </div>
+          <div className="form-group">
+            <label>Password</label>
+            <div className="input-group">
+              <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  className="form-control password-input"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+              />
+              <div className="input-group-append">
+              <span
+                  className="input-group-text password-toggle-btn"
+                  onClick={toggleShowPassword}
+              >
+                <i className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+              </span>
               </div>
             </div>
           </div>
 
-          <button type="submit" className="signup-button1" onClick={() => navigate("/Dummy")}>
+          <button type="submit" className="signup-button1">
             Sign In
           </button>
         </form>

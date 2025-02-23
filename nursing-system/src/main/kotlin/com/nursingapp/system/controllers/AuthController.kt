@@ -20,7 +20,7 @@ class LoginController(@Autowired val userService: UserService) {
         val bcrypt = BCryptPasswordEncoder()
 
         try {
-            val user = userService.findByEmail(loginRequest.email) ?: return ResponseEntity.ok("Could not find user")
+            val user = userService.findByEmail(loginRequest.email) ?: return ResponseEntity.status(401).body("Could not find user")
 
             val isEqual = bcrypt.matches(loginRequest.password, user.password)
             if (!isEqual) {

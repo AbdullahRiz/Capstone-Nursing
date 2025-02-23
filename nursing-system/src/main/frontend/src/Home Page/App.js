@@ -34,7 +34,7 @@ import Home from "../Components/Home/Home";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Signup from "../Components/Signup/signup";
-import Signin from "../Components/Singin/Signin";
+import Signin from "../Components/Signin/Signin";
 import Dummy from "../Components/Home/Dummy";
 import Footer from "../Components/Footer/Footer";
 
