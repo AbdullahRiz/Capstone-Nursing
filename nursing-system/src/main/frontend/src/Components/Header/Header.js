@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./Header.css";
 import Navigation from "./Navigation Bar";
+import Signin from "../Singin/Signin"
 import Home from "../Home/Home";
 
 const Header = () => {
@@ -17,7 +18,7 @@ const Header = () => {
 
         <ul className="navbar-nav ml-auto">
           <li className="nav-item">
-            <Link className="nav-link account-link" to="/account">
+            <Link className="nav-link account-link" to="/Signin">
               <i className="bi bi-person-circle"></i>
             </Link>
           </li>
