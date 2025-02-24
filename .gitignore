@@ -49,6 +49,3 @@ hs_err_pid*
 .env.development
 .env.production
 .env.test
-/config/application.properties
-/config/application.yml
-/secrets/

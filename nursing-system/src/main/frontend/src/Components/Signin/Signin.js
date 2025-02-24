@@ -3,7 +3,7 @@ import "../Signup/signup.css";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import Dummy from "../Home/Dummy"
+import Dummy from "../Home/Dummy";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -12,14 +12,34 @@ const SignIn = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const toggleShowPassword = () => {
     setShowPassword((prevState) => !prevState);
   };
 
+  // Helper function to validate email format
+  const isValidEmail = (email) => {
+    const emailRegex = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Validate email format
+    if (!isValidEmail(formData.email)) {
+      setErrorMessage("Invalid email format");
+      return;
+    }
+
+    // Validate password length
+    if (formData.password.length < 6) {
+      setErrorMessage("Password must be at least 6 characters long");
+      return;
+    }
+
     const bodyData = {
       email: formData.email,
       password: formData.password,
@@ -38,6 +58,10 @@ const SignIn = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
+      const data = await response.json();
+      const token = data.token;
+      localStorage.setItem("jwtToken", token);
+
       alert("Sign In Successful!");
       navigate("/Dummy");
     } catch (error) {
@@ -52,6 +76,9 @@ const SignIn = () => {
       ...prevState,
       [name]: value,
     }));
+
+    // Clear error message when user starts typing
+    setErrorMessage("");
   };
 
   return (
@@ -91,6 +118,12 @@ const SignIn = () => {
               </div>
             </div>
           </div>
+
+          {errorMessage && (
+              <div className="alert alert-danger" role="alert">
+                {errorMessage}
+              </div>
+          )}
 
           <button type="submit" className="signup-button1">
             Sign In

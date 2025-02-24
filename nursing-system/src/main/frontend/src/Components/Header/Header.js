@@ -10,18 +10,40 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
     const navigate = useNavigate();
     const [logoutMessage, setLogoutMessage] = useState("");
 
-    const handleLogout = () => {
-        // Clear authentication tokens or session data
-        localStorage.removeItem("authToken");
+    const handleLogout = async() => {
 
-        // Update the isLoggedIn state
-        setIsLoggedIn(false);
+        try {
+            const token = localStorage.getItem("jwtToken");
+            console.log(token)
 
-        // Set logout message
-        setLogoutMessage("You have successfully logged out.");
+            const response = await fetch("http://localhost:8080/api/logout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                }
+            })
 
-        // Redirect to the Home page
-        navigate("/");
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`)
+            }
+
+            // Clear authentication tokens or session data
+            localStorage.removeItem("jwtToken");
+
+            // Update the isLoggedIn state
+            setIsLoggedIn(false);
+
+            // Set logout message
+            setLogoutMessage("You have successfully logged out.");
+
+            // Redirect to the Home page
+            navigate("/");
+
+        } catch (error) {
+            console.error("Error during logout: ", error);
+            setLogoutMessage("Logout failed.");
+        }
 
         // Remove logout message after 3 seconds
         setTimeout(() => {
