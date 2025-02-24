@@ -38,6 +38,10 @@ const SignIn = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
+      const data = await response.json()
+      const token = data.token
+      localStorage.setItem("jwtToken", token)
+
       alert("Sign In Successful!");
       navigate("/Dummy");
     } catch (error) {

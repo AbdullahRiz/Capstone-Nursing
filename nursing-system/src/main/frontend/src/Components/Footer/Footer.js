@@ -27,7 +27,7 @@ const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <i class="bi bi-twitter-x"></i>
+              <i className="bi bi-twitter-x"></i>
             </a>
             <a
               href="https://instagram.com"
@@ -35,7 +35,7 @@ const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <i class="bi bi-instagram"></i>
+              <i className="bi bi-instagram"></i>
             </a>
             <a
               href="https://facebook.com"
@@ -43,7 +43,7 @@ const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <i class="bi bi-facebook"></i>
+              <i className="bi bi-facebook"></i>
             </a>
           </div>
         </div>
