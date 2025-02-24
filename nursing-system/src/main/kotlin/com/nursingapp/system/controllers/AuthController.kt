@@ -21,6 +21,10 @@ class LoginController(
 
     @PostMapping("/login")
     fun login(@RequestBody loginRequest: LoginRequest): ResponseEntity<LoginResponse> {
+        if (!isValidEmail(loginRequest.email)) {
+            return ResponseEntity.status(400).body(LoginResponse("Invalid email format", null))
+        }
+
         val bcrypt = BCryptPasswordEncoder()
 
         try {
@@ -40,6 +44,12 @@ class LoginController(
             return ResponseEntity.internalServerError().body(LoginResponse(e.message.toString(), null))
         }
     }
+}
+
+// Helper function to validate email format
+private fun isValidEmail(email: String): Boolean {
+    val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"
+    return email.matches(emailRegex.toRegex())
 }
 
 @RequestMapping("/api")
@@ -89,6 +99,14 @@ class SignupController(@Autowired val userService: UserService) {
 
     @PutMapping("/signup")
     fun signup(@RequestBody user: User): ResponseEntity<String> {
+        if (!isValidEmail(user.email)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email format")
+        }
+
+        if (user.password.length < 6) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password must be at least 6 characters long")
+        }
+
         userService.findByEmail(user.email)?.let {
             return ResponseEntity.status(422).body("E-Mail address already exists!")
         }

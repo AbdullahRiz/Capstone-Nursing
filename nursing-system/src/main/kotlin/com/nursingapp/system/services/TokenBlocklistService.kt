@@ -16,10 +16,4 @@ class TokenBlocklistService(private val tokenBlocklistRepository: TokenBlocklist
     fun isTokenBlocklisted(token: String): Boolean {
         return tokenBlocklistRepository.findByToken(token) != null
     }
-
-    fun cleanupExpiredTokens() {
-        val now = Date()
-        tokenBlocklistRepository.deleteByExpirationDateBefore(now)
-    }
-
 }

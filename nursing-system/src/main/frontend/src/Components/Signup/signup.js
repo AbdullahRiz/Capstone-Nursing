@@ -9,22 +9,40 @@ const Signup = () => {
     name: "",
     email: "",
     password: "",
-    role: selectedRole === "Nurse" ? "NURSE" : "HOSPITAL"
+    role: selectedRole === "Nurse" ? "NURSE" : "HOSPITAL",
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const toggleShowPassword = () => {
     setShowPassword((prevState) => !prevState);
   };
 
+  // Helper function to validate email format
+  const isValidEmail = (email) => {
+    const emailRegex = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!isValidEmail(formData.email)) {
+      setErrorMessage("Invalid email format");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setErrorMessage("Password must be at least 6 characters long");
+      return;
+    }
+
     const bodyData = {
       name: formData.name,
       email: formData.email,
       password: formData.password,
-      role: selectedRole === "Nurse" ? "NURSE" : "HOSPITAL"
+      role: selectedRole === "Nurse" ? "NURSE" : "HOSPITAL",
     };
 
     console.log("Form Data Submitted:", bodyData);
@@ -40,7 +58,7 @@ const Signup = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      alert(`Signup Successful!`);
+      alert("Signup Successful!");
     } catch (error) {
       console.error("Error during fetch:", error);
       alert(`Signup failed: ${error.message}`);
@@ -53,6 +71,8 @@ const Signup = () => {
       ...prevState,
       [name]: value,
     }));
+
+    setErrorMessage("");
   };
 
   return (
@@ -96,7 +116,7 @@ const Signup = () => {
               />
               <div className="input-group-append">
               <span
-                className="input-group-text password-toggle-btn"
+                  className="input-group-text password-toggle-btn"
                   onClick={toggleShowPassword}
               >
                 <i className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
@@ -193,6 +213,12 @@ const Signup = () => {
                   </select>
                 </div>
               </>
+          )}
+
+          {errorMessage && (
+              <div className="alert alert-danger" role="alert">
+                {errorMessage}
+              </div>
           )}
 
           <button type="submit" className="signup-button1">
