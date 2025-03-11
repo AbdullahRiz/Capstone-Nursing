@@ -35,7 +35,7 @@ class JwtRequestFilter(
 
             val username = jwtUtil.extractUsername(token)
 
-            if (username != null && SecurityContextHolder.getContext().authentication == null) {
+            if (SecurityContextHolder.getContext().authentication == null) {
                 val userDetails = customUserDetailsService.loadUserByUsername(username)
                 if (jwtUtil.validateToken(token, userDetails)) {
                     val authentication = UsernamePasswordAuthenticationToken(

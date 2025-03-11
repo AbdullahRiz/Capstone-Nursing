@@ -31,7 +31,8 @@ class SecurityConfig(
             .csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/api/signup/**", "/api/login", "/api/logout").permitAll()
+                    // TODO: Remove wildcard when we have more pages to authenticate
+                    .requestMatchers("/**", "/api/signup/**", "/api/login", "/api/logout").permitAll()
                     .anyRequest().authenticated()
             }
             .sessionManagement { session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
