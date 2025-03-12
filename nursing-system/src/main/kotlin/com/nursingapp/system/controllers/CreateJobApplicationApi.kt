@@ -4,6 +4,7 @@ import com.nursingapp.system.models.*
 import com.nursingapp.system.security.JwtUtil
 import com.nursingapp.system.services.JobApplicationService
 import com.nursingapp.system.services.UserService
+import org.apache.coyote.Response
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
