@@ -4,6 +4,7 @@ import com.nursingapp.system.models.*
 import com.nursingapp.system.security.JwtUtil
 import com.nursingapp.system.services.JobApplicationService
 import com.nursingapp.system.services.UserService
+import org.apache.coyote.Response
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -34,6 +35,10 @@ class CreateJobApplicationApi(
             requiredSkills = jobApplicationInput.requiredSkills,
             hiringGoal = jobApplicationInput.hiringGoal,
             visibility = jobApplicationInput.visibility,
+            startDate = jobApplicationInput.startDate,
+            endDate = jobApplicationInput.endDate,
+            minPay = jobApplicationInput.minPay,
+            maxPay = jobApplicationInput.maxPay,
         )
         jobApplicationService.create(jobApplication)
         return ResponseEntity.status(HttpStatus.CREATED).body("Job application created: $jobApplication")
@@ -65,7 +70,40 @@ class CreateJobApplicationApi(
         jobApplication.applicants += applicant
         jobApplicationService.save(jobApplication)
 
+        // Add job ID to user's list of applied jobs
+        userService.addAppliedJobId(user.id, id)
+
         return ResponseEntity.status(HttpStatus.CREATED).body("Applicant added to job application: $applicant")
+    }
+
+    @PutMapping("/jobApplication/{id}/unapply")
+    fun unapplyJobApplication(
+        @PathVariable id: String,
+        @RequestHeader("Authorization") token: String,
+    ): ResponseEntity<String> {
+        val userResponse = getUserFromToken(token, Role.NURSE)
+        if (userResponse.statusCode != HttpStatus.OK) {
+            return ResponseEntity.status(userResponse.statusCode).build()
+        }
+
+        val user = userResponse.body!!
+        val jobApplication = jobApplicationService.getById(id)
+            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Job application not found.")
+
+        // Check if the user has applied to this job
+        val hasApplied = jobApplication.applicants.any { it.applicantId == user.id }
+        if (!hasApplied) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You have not applied to this job.")
+        }
+
+        // Remove the user from the job application's applicants list
+        jobApplication.applicants = jobApplication.applicants.filter { it.applicantId != user.id }
+        jobApplicationService.save(jobApplication)
+
+        // Remove the job application ID from the user's appliedJobIds list
+        userService.removeAppliedJobById(user.id!!, id)
+
+        return ResponseEntity.ok("Successfully unapplied from job application: $jobApplication")
     }
 
     @GetMapping("/jobApplication/{id}")
@@ -101,12 +139,37 @@ class CreateJobApplicationApi(
             description = updateFieldsInput.description ?: existingJobApplication.description,
             requiredSkills = updateFieldsInput.requiredSkills ?: existingJobApplication.requiredSkills,
             hiringGoal = updateFieldsInput.hiringGoal ?: existingJobApplication.hiringGoal,
-            visibility = updateFieldsInput.visibility ?: existingJobApplication.visibility
+            visibility = updateFieldsInput.visibility ?: existingJobApplication.visibility,
+            startDate = updateFieldsInput.startDate ?: existingJobApplication.startDate,
+            endDate = updateFieldsInput.endDate ?: existingJobApplication.endDate,
+            minPay = updateFieldsInput.minPay ?: existingJobApplication.minPay,
+            maxPay = updateFieldsInput.maxPay ?: existingJobApplication.maxPay,
         )
 
         jobApplicationService.update(id, updatedJobApplication)
 
         return ResponseEntity.ok("Job application updated successfully: $updatedJobApplication")
+    }
+
+    @PostMapping("/listJobApplications")
+    fun listJobApplications(
+        @RequestBody filter: JobApplicationFilter,
+        @RequestHeader("Authorization") token: String
+    ): ResponseEntity<List<JobApplication>> = ResponseEntity.ok(jobApplicationService.listJobApplications(filter))
+
+    @GetMapping("/listAppliedJobs")
+    fun listAppliedJobs(
+        @RequestHeader("Authorization") token: String,
+    ): ResponseEntity<List<JobApplication>> {
+        val userResponse = getUserFromToken(token, Role.NURSE)
+        if (userResponse.statusCode != HttpStatus.OK) {
+            return ResponseEntity.status(userResponse.statusCode).build()
+        }
+
+        val user = userResponse.body!!
+        val appliedJobs = jobApplicationService.getJobApplicationsByIds(user.appliedJobsIds!!)
+
+        return ResponseEntity.ok(appliedJobs)
     }
 
     @DeleteMapping("/jobApplication/{id}")
@@ -127,6 +190,11 @@ class CreateJobApplicationApi(
         // Check if the user is authorized (only the hospital that created it can update)
         if (user.id != existingJobApplication.hospitalId) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this job application.")
+        }
+
+        // Accounts for all applicants who had this job application on their profile
+        existingJobApplication.applicants.forEach { applicant ->
+            userService.removeAppliedJobById(applicant.applicantId!!, id)
         }
 
         jobApplicationService.delete(id)

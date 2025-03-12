@@ -2,6 +2,7 @@ package com.nursingapp.system.services
 
 import com.nursingapp.system.models.Applicant
 import com.nursingapp.system.models.JobApplication
+import com.nursingapp.system.models.JobApplicationFilter
 import com.nursingapp.system.models.VisibilityStatus
 import com.nursingapp.system.repositories.JobApplicationRepository
 
@@ -51,4 +52,38 @@ class JobApplicationService (private val jobApplicationRepository: JobApplicatio
         jobApplicationRepository.deleteById(id)
     }
     fun save(jobApplication: JobApplication): JobApplication = jobApplicationRepository.save(jobApplication)
+    fun listJobApplications(filter: JobApplicationFilter?): List<JobApplication> {
+        return jobApplicationRepository.findAll().filter { jobApplication ->
+            // If no filter is provided, include all job applications
+            if (filter == null) {
+                return@filter true
+            }
+            val matchesSkillSet = filter.skillSet.isNullOrEmpty() ||
+                    jobApplication.requiredSkills.containsAll(filter.skillSet)
+            val matchesMinimumHours = filter.minimumHours == null ||
+                    jobApplication.hiringGoal?.targetHours!! >= filter.minimumHours
+            val matchesMaximumHours = filter.maximumHours == null ||
+                    jobApplication.hiringGoal?.targetHours!! <= filter.maximumHours
+            val matchesHospitalName = filter.hospitalId.isNullOrEmpty() ||
+                    jobApplication.hospitalId == filter.hospitalId
+            val matchesStartDate = filter.startDate == null ||
+                    jobApplication.createdAt >= filter.startDate
+            val matchesEndDate = filter.endDate == null ||
+                    jobApplication.createdAt <= filter.endDate
+            val matchesMinPay = filter.minPay == null ||
+                    jobApplication.minPay!! >= filter.minPay
+            val matchesMaxPay = filter.maxPay == null ||
+                    jobApplication.maxPay!! <= filter.maxPay
+
+            matchesSkillSet &&
+                    matchesMinimumHours &&
+                    matchesMaximumHours &&
+                    matchesHospitalName &&
+                    matchesStartDate &&
+                    matchesEndDate &&
+                    matchesMinPay &&
+                    matchesMaxPay
+        }
+    }
+    fun getJobApplicationsByIds(ids: List<String>): List<JobApplication> = jobApplicationRepository.findAllById(ids)
 }

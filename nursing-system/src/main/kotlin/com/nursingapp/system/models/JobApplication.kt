@@ -17,6 +17,10 @@ data class JobApplication(
     var updatedAt: Instant = Instant.now(),
     var visibility: VisibilityStatus = VisibilityStatus.PUBLIC,
     var applicants: List<Applicant> = emptyList(),
+    var startDate: Instant? = null,
+    var endDate: Instant? = null,
+    var minPay: Double? = 0.0,
+    var maxPay: Double? = 0.0,
 )
 
 enum class VisibilityStatus {
@@ -43,6 +47,10 @@ data class JobApplicationInput(
     val requiredSkills: List<SkillSet> = emptyList(),
     val hiringGoal: HiringGoal? = null,
     val visibility: VisibilityStatus = VisibilityStatus.PUBLIC,
+    val startDate: Instant?,
+    val endDate: Instant?,
+    val minPay: Double?,
+    val maxPay: Double?,
 )
 
 data class UpdateFieldsInput(
@@ -51,6 +59,10 @@ data class UpdateFieldsInput(
     val requiredSkills: List<SkillSet>?,
     val hiringGoal: HiringGoal?,
     val visibility: VisibilityStatus?,
+    val startDate: Instant?,
+    val endDate: Instant?,
+    val minPay: Double?,
+    val maxPay: Double?,
 )
 
 data class Applicant(
@@ -80,3 +92,14 @@ enum class SkillSet(val value: String) {
     DOCUMENTATION("Documentation"),
     HEALTH_EDUCATION("Health Education");
 }
+
+data class JobApplicationFilter(
+    val skillSet: List<SkillSet>? = emptyList(),
+    val minimumHours: Double? = null,
+    val maximumHours: Double? = null,
+    val hospitalId: String? = null,
+    val startDate: Instant? = null,
+    val endDate: Instant? = null,
+    val minPay: Double? = null,
+    val maxPay: Double? = null,
+)

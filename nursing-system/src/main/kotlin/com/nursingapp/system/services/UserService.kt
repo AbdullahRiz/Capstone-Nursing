@@ -18,6 +18,20 @@ class UserService(private val userRepository: UserRepository) {
         val updatedUser = existingUser.copy(name = user.name)
         return userRepository.save(updatedUser)
     }
+    fun addAppliedJobId(userId: String, jobApplicationId: String) {
+        val user = getById(userId)
+        val updatedAppliedJobIds = user?.appliedJobsIds?.plus(jobApplicationId)
+        if (user != null) {
+            userRepository.save(user.copy(appliedJobsIds = updatedAppliedJobIds))
+        }
+    }
+    fun removeAppliedJobById(userId: String, jobApplicationId: String) {
+        val user = getById(userId)
+        val updatedAppliedJobs = user?.appliedJobsIds?.filter { it != jobApplicationId }
+        if (user != null) {
+            userRepository.save(user.copy(appliedJobsIds = updatedAppliedJobs))
+        }
+    }
     fun delete(id: String) {
         userRepository.deleteById(id)
     }
