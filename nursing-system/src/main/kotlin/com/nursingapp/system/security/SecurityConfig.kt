@@ -31,6 +31,7 @@ class SecurityConfig(
             .csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { auth ->
                 auth
+                    // TODO: Remove wildcard when we have more pages to authenticate
                     .requestMatchers("/**", "/api/signup/**", "/api/login", "/api/logout").permitAll()
                     .anyRequest().authenticated()
             }
