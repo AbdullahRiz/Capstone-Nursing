@@ -9,6 +9,9 @@ import Signup from "../Components/Signup/signup";
 import Signin from "../Components/Signin/Signin";
 import Dummy from "../Components/Home/Dummy";
 import Footer from "../Components/Footer/Footer";
+import JobListDashboard from "../Components/Dashboard/JobListDashboard";
+import JobDetail from "../Components/Job/JobDetail";
+import NurseListDashboard from "../Components/Dashboard/NurseListDashboard";
 
 const AppContent = () => {
     const location = useLocation();
@@ -22,6 +25,9 @@ const AppContent = () => {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/signin" element={<Signin />} />
                 <Route path="/dummy" element={<Dummy isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+                <Route path="/jobListDashboard" element={<JobListDashboard isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+                <Route path="/nurseListDashboard" element={<NurseListDashboard isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+                <Route path="/job/:id" element={<JobDetail />} />
             </Routes>
         </>
     );

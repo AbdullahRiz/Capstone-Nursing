@@ -4,10 +4,10 @@ import com.nursingapp.system.models.*
 import com.nursingapp.system.security.JwtUtil
 import com.nursingapp.system.services.JobApplicationService
 import com.nursingapp.system.services.UserService
-import org.apache.coyote.Response
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.time.Instant
 
 @RequestMapping("/api")
 @RestController
@@ -71,7 +71,7 @@ class CreateJobApplicationApi(
         jobApplicationService.save(jobApplication)
 
         // Add job ID to user's list of applied jobs
-        userService.addAppliedJobId(user.id, id)
+        userService.addAppliedJobById(user.id, id)
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Applicant added to job application: $applicant")
     }
@@ -144,6 +144,7 @@ class CreateJobApplicationApi(
             endDate = updateFieldsInput.endDate ?: existingJobApplication.endDate,
             minPay = updateFieldsInput.minPay ?: existingJobApplication.minPay,
             maxPay = updateFieldsInput.maxPay ?: existingJobApplication.maxPay,
+            updatedAt = Instant.now(),
         )
 
         jobApplicationService.update(id, updatedJobApplication)
@@ -167,7 +168,7 @@ class CreateJobApplicationApi(
         }
 
         val user = userResponse.body!!
-        val appliedJobs = jobApplicationService.getJobApplicationsByIds(user.appliedJobsIds!!)
+        val appliedJobs = jobApplicationService.getJobApplicationsByIds(user.nurseDetails?.appliedJobsIds!!)
 
         return ResponseEntity.ok(appliedJobs)
     }

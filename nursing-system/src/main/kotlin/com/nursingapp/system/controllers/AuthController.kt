@@ -1,5 +1,6 @@
 package com.nursingapp.system.controllers
 
+import com.nursingapp.system.models.Role
 import com.nursingapp.system.models.User
 import com.nursingapp.system.security.JwtUtil
 import com.nursingapp.system.services.CustomUserDetailsService
@@ -18,6 +19,18 @@ class LoginController(
     @Autowired val customUserDetailsService: CustomUserDetailsService,
     @Autowired val jwtUtil: JwtUtil
 ) {
+
+    @GetMapping("/getUserDetails")
+    fun getUserByToken(@RequestHeader("Authorization") token: String): ResponseEntity<User> {
+        val userResponse = getUserFromToken(token)
+        return userResponse
+    }
+
+    @GetMapping("/getUserById/{id}")
+    fun getUserById( @RequestHeader("Authorization") token: String, @PathVariable id: String): ResponseEntity<User> {
+        val user = userService.getById(id)
+        return ResponseEntity.ok(user)
+    }
 
     @PostMapping("/login")
     fun login(@RequestBody loginRequest: LoginRequest): ResponseEntity<LoginResponse> {
@@ -43,6 +56,19 @@ class LoginController(
         } catch (e: Exception) {
             return ResponseEntity.internalServerError().body(LoginResponse(e.message.toString(), null))
         }
+    }
+
+    private fun getUserFromToken(token: String, requiredRole: Role? = null): ResponseEntity<User> {
+        val jwt = token.removePrefix("Bearer ").trim()
+        val currentUserEmail = jwtUtil.extractUsername(jwt)
+        val user = userService.findByEmail(currentUserEmail) ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+
+        // Check if the user has the required role (if specified)
+        if (requiredRole != null && user.role != requiredRole) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        }
+
+        return ResponseEntity.ok(user)
     }
 }
 

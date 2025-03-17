@@ -1,5 +1,7 @@
 package com.nursingapp.system.services
 
+import com.nursingapp.system.models.NurseDetails
+import com.nursingapp.system.models.Role
 import com.nursingapp.system.models.User
 import com.nursingapp.system.repositories.UserRepository
 import org.springframework.security.core.userdetails.UserDetails
@@ -18,22 +20,36 @@ class UserService(private val userRepository: UserRepository) {
         val updatedUser = existingUser.copy(name = user.name)
         return userRepository.save(updatedUser)
     }
-    fun addAppliedJobId(userId: String, jobApplicationId: String) {
+    fun addAppliedJobById(userId: String, jobApplicationId: String) {
         val user = getById(userId)
-        val updatedAppliedJobIds = user?.appliedJobsIds?.plus(jobApplicationId)
-        if (user != null) {
-            userRepository.save(user.copy(appliedJobsIds = updatedAppliedJobIds))
+        if (user != null && user.role == Role.NURSE) {
+            val updatedNurseDetails = user.nurseDetails?.copy(
+                appliedJobsIds = user.nurseDetails.appliedJobsIds + jobApplicationId
+            ) ?: NurseDetails(appliedJobsIds = listOf(jobApplicationId))
+
+            val updatedUser = user.copy(nurseDetails = updatedNurseDetails)
+            userRepository.save(updatedUser)
         }
     }
     fun removeAppliedJobById(userId: String, jobApplicationId: String) {
         val user = getById(userId)
-        val updatedAppliedJobs = user?.appliedJobsIds?.filter { it != jobApplicationId }
-        if (user != null) {
-            userRepository.save(user.copy(appliedJobsIds = updatedAppliedJobs))
+        if (user != null && user.role == Role.NURSE) {
+            val updatedNurseDetails = user.nurseDetails?.copy(
+                appliedJobsIds = user.nurseDetails.appliedJobsIds.filter { it != jobApplicationId }
+            )
+
+            val updatedUser = user.copy(nurseDetails = updatedNurseDetails)
+            userRepository.save(updatedUser)
         }
     }
     fun delete(id: String) {
         userRepository.deleteById(id)
+    }
+    fun searchNurses(): List<User> {
+        return userRepository.findAll().filter { user ->
+            // Check if the user is a nurse
+            user.role == Role.NURSE
+        }
     }
 }
 
