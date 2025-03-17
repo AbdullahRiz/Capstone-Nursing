@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.Instant
+import org.apache.coyote.Response
 
 @RequestMapping("/api")
 @RestController
@@ -169,6 +170,7 @@ class CreateJobApplicationApi(
 
         val user = userResponse.body!!
         val appliedJobs = jobApplicationService.getJobApplicationsByIds(user.nurseDetails?.appliedJobsIds!!)
+
 
         return ResponseEntity.ok(appliedJobs)
     }
