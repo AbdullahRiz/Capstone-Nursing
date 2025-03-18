@@ -153,3 +153,6 @@ const JobDetail = () => {
 };
 
 export default JobDetail;
+
+
+// localhost:8080/api/create-checkout-session

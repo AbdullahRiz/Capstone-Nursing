@@ -13,6 +13,7 @@ import JobListDashboard from "../Components/Dashboard/JobListDashboard";
 import JobDetail from "../Components/Job/JobDetail";
 import NurseListDashboard from "../Components/Dashboard/NurseListDashboard";
 
+
 const AppContent = () => {
     const location = useLocation();
     const [isLoggedIn, setIsLoggedIn] = useState(false);

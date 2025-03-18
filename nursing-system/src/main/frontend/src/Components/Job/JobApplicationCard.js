@@ -12,6 +12,7 @@ const JobApplicationCard = ({ id, title, applicants, targetDate, updatedAt }) =>
                     <p><strong>Last Updated:</strong> {updatedAt}</p>
                     <p><strong>Target Date:</strong> {targetDate}</p>
                 </div>
+                <button className="hire">Hire</button>
             </div>
         </Link>
     );

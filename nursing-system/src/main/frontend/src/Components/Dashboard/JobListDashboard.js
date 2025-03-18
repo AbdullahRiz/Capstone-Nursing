@@ -150,8 +150,11 @@ const JobListDashboard = () => {
                 {/* Main Content */}
                 <main className="main-content">
                     <header className="dashboard-header">
-                        <h1>Job Applications</h1>
-                        <p>Hello, {user.name}</p>
+                        <div>
+                            <h1>Job Applications</h1>
+                            <p>Hello, {user.name || "Guest"}</p>
+                        </div>
+
                     </header>
 
                     <div className="applications-grid">

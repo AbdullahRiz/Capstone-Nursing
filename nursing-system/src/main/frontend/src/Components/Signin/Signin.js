@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Dummy from "../Home/Dummy";
+import JobListDashboard from "../Dashboard/JobListDashboard";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -63,7 +64,7 @@ const SignIn = () => {
       localStorage.setItem("jwtToken", token);
 
       alert("Sign In Successful!");
-      navigate("/Dummy");
+      navigate("/JobListDashboard");
     } catch (error) {
       console.error("Error during fetch:", error);
       alert(`Sign In failed: ${error.message}`);

@@ -2,12 +2,45 @@ import React, { useEffect, useState } from "react";
 import "./NurseItem.css";
 import defaultProfilePicture from "../../Assets/default-user-photo.png";
 
+
 const NurseItem = ({ nurse }) => {
     const [nurseDetails, setNurseDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isHired, setIsHired] = useState(false);
 
-    // Fetch nurse details using the applicantId
+    const handleHireClick = () => {
+        setIsHired(true);
+    };
+
+    const handlePayClick = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/api/create-checkout-session", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+                },
+                body: JSON.stringify({
+                    amount: 2000, // You can customize this per nurse/job
+                    applicantId: nurse.applicantId,
+                    jobId: nurse.jobId
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.url) {
+                window.location.href = data.url; // Redirect to Stripe Checkout
+            } else {
+                alert("Checkout failed: " + data.message);
+            }
+        } catch (error) {
+            console.error("Payment error:", error);
+            alert("An error occurred during payment.");
+        }
+    };
+
     useEffect(() => {
         const fetchNurseDetails = async () => {
             try {
@@ -26,7 +59,6 @@ const NurseItem = ({ nurse }) => {
 
                 const user = await response.json();
 
-                // Map the fetched user data to the nurse object
                 const mappedNurse = {
                     name: user.name || "Unknown",
                     specialty: user.nurseDetails?.certifications?.join(", ") || "No specialty",
@@ -46,17 +78,9 @@ const NurseItem = ({ nurse }) => {
         fetchNurseDetails();
     }, [nurse.applicantId]);
 
-    if (loading) {
-        return <p>Loading...</p>;
-    }
-
-    if (error) {
-        return <p>Error: {error}</p>;
-    }
-
-    if (!nurseDetails) {
-        return <p>No nurse details found.</p>;
-    }
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
+    if (!nurseDetails) return <p>No nurse details found.</p>;
 
     return (
         <div className="nurse-item">
@@ -69,7 +93,19 @@ const NurseItem = ({ nurse }) => {
                     <p><strong>Hours Available:</strong> {nurseDetails.hoursAvailable}</p>
                 </div>
             </div>
-            <button className="hire-button">Hire</button>
+            <div className="button-container">
+            <button
+                className={`hire-button ${isHired ? "hired" : ""}`}
+                onClick={handleHireClick}
+                disabled={isHired}
+            >
+                {isHired ? "Hired" : "Hire"}
+            </button>
+
+            {isHired && (
+                <button className="Paybutton" onClick={handlePayClick}>Pay</button>
+            )}
+            </div>
         </div>
     );
 };
