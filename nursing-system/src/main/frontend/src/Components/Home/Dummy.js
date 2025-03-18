@@ -42,6 +42,19 @@ const Dummy = ({ isLoggedIn, setIsLoggedIn }) => {
         navigate("/signin");
     };
 
+    const checkout = async () => {
+        const response = await fetch("http://localhost:8080/api/create-checkout-session", {
+              method: "POST",
+              headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + localStorage.jwtToken
+              },
+              body: JSON.stringify({ amount: 2000 }),
+            })
+        const data = await response.json();
+        window.location.href = data.url
+    }
+
     return (
         <>
             <div className="home-container">
@@ -79,6 +92,8 @@ const Dummy = ({ isLoggedIn, setIsLoggedIn }) => {
                         </button>
                     </div>
                 </div>
+
+                <button onClick={checkout}>Checkout</button>
 
                 <div className="hospital">
                     <img src={hospital} alt="hospital" className="hospital-image" />
