@@ -121,6 +121,10 @@ const JobListDashboard = () => {
     if (error) return <p>Error: {error}</p>;
     if (!user) return <p>Loading user info...</p>;
 
+    if (!user) {
+        return <p>Loading...</p>
+    }
+
     return (
         <>
             <div className="dashboard-container">
