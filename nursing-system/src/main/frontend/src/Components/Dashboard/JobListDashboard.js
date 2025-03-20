@@ -25,6 +25,7 @@ const JobListDashboard = () => {
 
     // Fetch job applications from the API
     const fetchJobApplications = async (filterParams) => {
+        setLoading(true);
         try {
             const token = localStorage.getItem("jwtToken");
             const response = await fetch("/api/listJobApplications", {
@@ -50,6 +51,7 @@ const JobListDashboard = () => {
     };
 
     const fetchUserDetails = async () => {
+        setLoading(true);
         try {
             const token = localStorage.getItem("jwtToken");
             const response = await fetch("/api/getUserDetails", {
@@ -75,6 +77,7 @@ const JobListDashboard = () => {
         } catch (err) {
             setError(err.message);
         }
+        setLoading(false);
     };
 
     // Fetch job applications on initial render
@@ -134,6 +137,10 @@ const JobListDashboard = () => {
     // Display error state
     if (error) {
         return <p>Error: {error}</p>;
+    }
+
+    if (!user) {
+        return <p>Loading...</p>
     }
 
     return (

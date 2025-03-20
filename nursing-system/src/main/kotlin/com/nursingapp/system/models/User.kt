@@ -10,6 +10,7 @@ data class User(
     val password: String,
     val name: String? = null,
     val role: Role,
+    val rating: Double = 5.0,
     val nurseDetails: NurseDetails? = null,
     val hospitalDetails: HospitalDetails? = null,
 )
@@ -18,6 +19,7 @@ data class NurseDetails(
     val appliedJobsIds: List<String> = emptyList(),
     val certifications: List<String> = emptyList(),
     val experienceYears: Int = 0,
+    val isHired: Boolean = false,
 )
 
 data class HospitalDetails(

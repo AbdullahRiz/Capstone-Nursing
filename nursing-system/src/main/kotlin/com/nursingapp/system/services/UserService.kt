@@ -51,6 +51,14 @@ class UserService(private val userRepository: UserRepository) {
             user.role == Role.NURSE
         }
     }
+    fun updateNurseHiredStatus(hiredStatus: Boolean, user: User) {
+        val updatedNurseDetails = user.nurseDetails?.copy(
+            isHired = hiredStatus
+        ) ?: NurseDetails(isHired = true)
+
+        val updatedUser = user.copy(nurseDetails = updatedNurseDetails)
+        userRepository.save(updatedUser)
+    }
 }
 
 @Service

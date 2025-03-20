@@ -9,8 +9,27 @@ const NurseItem = ({ nurse }) => {
     const [error, setError] = useState(null);
     const [isHired, setIsHired] = useState(false);
 
-    const handleHireClick = () => {
-        setIsHired(true);
+    const handleHireClick = async () => {
+         try {
+            const response = await fetch("http://localhost:8080/api/hireNurse", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+                },
+                body: JSON.stringify({
+                    email: nurseDetails.email, // You can customize this per nurse/job
+                })
+            });
+
+            const data = await response.json();
+
+            setIsHired(true);
+
+        } catch (error) {
+            console.error("Hiring error:", error);
+            alert("An error occurred during hiring.");
+        }
     };
 
     const handlePayClick = async () => {
@@ -61,13 +80,17 @@ const NurseItem = ({ nurse }) => {
 
                 const mappedNurse = {
                     name: user.name || "Unknown",
+                    email: user.email || "Unknown",
+                    rating: user.rating || 0,
                     specialty: user.nurseDetails?.certifications?.join(", ") || "No specialty",
                     experience: user.nurseDetails?.experienceYears?.toString() + " years" || "No experience",
                     hoursAvailable: nurse.availableHours.toString() || "No availability",
                     profilePicture: user.profilePicture || defaultProfilePicture,
+                    isHired: user.nurseDetails?.isHired
                 };
 
                 setNurseDetails(mappedNurse);
+                setIsHired(mappedNurse.isHired)
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -87,7 +110,7 @@ const NurseItem = ({ nurse }) => {
             <div className="nurse-profile">
                 <img src={nurseDetails.profilePicture} alt={nurseDetails.name} className="profile-picture" />
                 <div className="nurse-info">
-                    <h3>{nurseDetails.name}</h3>
+                    <h3>{nurseDetails.name} {nurseDetails.rating > 4 ? "(Recommended)" : null}</h3>
                     <p><strong>Specialty:</strong> {nurseDetails.specialty}</p>
                     <p><strong>Experience:</strong> {nurseDetails.experience}</p>
                     <p><strong>Hours Available:</strong> {nurseDetails.hoursAvailable}</p>
