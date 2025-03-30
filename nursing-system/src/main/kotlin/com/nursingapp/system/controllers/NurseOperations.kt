@@ -5,7 +5,6 @@ import com.nursingapp.system.services.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 
 @RequestMapping("/api")
 @RestController
@@ -22,7 +21,7 @@ class NurseOperations (
 
     @PostMapping("/setNurseHourlyRate")
     fun setNurseHourlyRate(
-        @RequestParam hourlyRateRequest: HourlyRateRequest
+        @RequestBody hourlyRateRequest: HourlyRateRequest
     ): ResponseEntity<HourlyRateResponse> {
         val nurse = userService.findByEmail(hourlyRateRequest.email) ?: return ResponseEntity.status(401).body(HourlyRateResponse("Could not find nurse"))
 
@@ -46,7 +45,7 @@ class NurseOperations (
 fun hasTwoDecimalPlaces(number: Double): Boolean {
     val stringNumber = number.toString()
     val decimalPart = stringNumber.substringAfter(".", "")
-    return decimalPart.length == 2
+    return decimalPart.length <= 2
 }
 
 data class HourlyRateRequest(
