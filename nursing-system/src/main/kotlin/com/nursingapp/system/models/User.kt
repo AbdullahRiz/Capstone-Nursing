@@ -20,6 +20,7 @@ data class NurseDetails(
     val certifications: List<String> = emptyList(),
     val experienceYears: Int = 0,
     val isHired: Boolean = false,
+    val hourlyRate: Double = 0.0
 )
 
 data class HospitalDetails(

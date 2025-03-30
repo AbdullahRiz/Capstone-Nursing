@@ -59,6 +59,14 @@ class UserService(private val userRepository: UserRepository) {
         val updatedUser = user.copy(nurseDetails = updatedNurseDetails)
         userRepository.save(updatedUser)
     }
+    fun updateNurseHourlyRate(hourlyRate: Double, user: User) {
+        val updatedNurseDetails = user.nurseDetails?.copy(
+            hourlyRate = hourlyRate
+        ) ?: NurseDetails(hourlyRate = 0.0)
+
+        val updatedUser = user.copy(nurseDetails = updatedNurseDetails)
+        userRepository.save(updatedUser)
+    }
 }
 
 @Service
