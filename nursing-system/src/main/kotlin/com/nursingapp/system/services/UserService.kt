@@ -59,6 +59,30 @@ class UserService(private val userRepository: UserRepository) {
         val updatedUser = user.copy(nurseDetails = updatedNurseDetails)
         userRepository.save(updatedUser)
     }
+    fun updateNurseRating(rating: Int, nurse: User, hospital: User) {
+        if (nurse.role != Role.NURSE) return
+
+        val currentDetails = nurse.nurseDetails ?: NurseDetails()
+
+        // Explicitly create new Map with String keys and Double values
+        val updatedHistory: Map<String, Double> = currentDetails.ratingHistory +
+                mapOf(hospital.id!! to rating.toDouble())
+
+        // Calculate new average rating
+        val newAverage = if (updatedHistory.isNotEmpty()) {
+            updatedHistory.values.average()
+        } else {
+            5.0 // default rating
+        }
+
+        val updatedNurseDetails = currentDetails.copy(
+            rating = newAverage,
+            ratingHistory = updatedHistory
+        )
+
+        val updatedUser = nurse.copy(nurseDetails = updatedNurseDetails)
+        userRepository.save(updatedUser)
+    }
 }
 
 @Service
