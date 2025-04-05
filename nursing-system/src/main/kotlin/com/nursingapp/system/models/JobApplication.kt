@@ -21,6 +21,7 @@ data class JobApplication(
     var endDate: Instant? = null,
     var minPay: Double? = 0.0,
     var maxPay: Double? = 0.0,
+    var contractFileName: String? = null
 )
 
 enum class VisibilityStatus {
@@ -51,6 +52,7 @@ data class JobApplicationInput(
     val endDate: Instant?,
     val minPay: Double?,
     val maxPay: Double?,
+    val contractFileName: String?
 )
 
 data class UpdateFieldsInput(
