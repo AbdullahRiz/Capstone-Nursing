@@ -21,7 +21,8 @@ class NurseOperations (
 
     @PostMapping("/setNurseHourlyRate")
     fun setNurseHourlyRate(
-        @RequestBody hourlyRateRequest: HourlyRateRequest
+        @RequestBody hourlyRateRequest: HourlyRateRequest,
+        @RequestHeader("Authorization") token: String
     ): ResponseEntity<HourlyRateResponse> {
         val nurse = userService.findByEmail(hourlyRateRequest.email) ?: return ResponseEntity.status(401).body(HourlyRateResponse("Could not find nurse"))
 

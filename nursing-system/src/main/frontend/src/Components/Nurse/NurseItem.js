@@ -76,6 +76,9 @@ const NurseItem = ({ nurse }) => {
 
         try {
             const response = await fetch('/api/uploadContract', {
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+                },
                 method: 'POST',
                 body: formData,
             });
@@ -94,6 +97,9 @@ const NurseItem = ({ nurse }) => {
     const handleContractDownload = async () => {
         try {
             const response = await fetch("http://localhost:8080/api/contracts/CS5764_Project1.pdf", {
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+                },
                 responseType: 'blob',
             });
             const blob = await response.blob();
