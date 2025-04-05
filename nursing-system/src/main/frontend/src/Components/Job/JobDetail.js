@@ -147,10 +147,11 @@ const JobDetail = () => {
                     </div>
                 )}
             </div>
-            <Footer />
+            <Footer/>
         </>
     );
 };
+
 
 export default JobDetail;
 
