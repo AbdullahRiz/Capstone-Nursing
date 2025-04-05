@@ -40,6 +40,7 @@ class CreateJobApplicationApi(
             endDate = jobApplicationInput.endDate,
             minPay = jobApplicationInput.minPay,
             maxPay = jobApplicationInput.maxPay,
+            contractFileName = jobApplicationInput.contractFileName
         )
         jobApplicationService.create(jobApplication)
         return ResponseEntity.status(HttpStatus.CREATED).body("Job application created: $jobApplication")

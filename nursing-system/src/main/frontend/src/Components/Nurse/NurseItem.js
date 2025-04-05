@@ -20,6 +20,7 @@ const NurseItem = ({ nurse }) => {
     const handleHireClick = () => {
         setShowHireModal(true);
     };
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const handleSubmitHire = async () => {
         // Basic form validation (optional but recommended)
@@ -86,6 +87,63 @@ const NurseItem = ({ nurse }) => {
             alert("An error occurred during payment.");
         }
     };
+
+    const handleFileChange = (event) => {
+        setSelectedFile(event.target.files[0]);
+    };
+
+    const handleContractUpload = async () => {
+        if (!selectedFile) {
+            alert('Please select a contract to upload.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+
+        try {
+            const response = await fetch('/api/uploadContract', {
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+                },
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                alert('Contract uploaded successfully!');
+            } else {
+                alert('Contract upload failed.');
+            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            alert('An error occurred during contract upload.');
+        }
+    };
+
+    const handleContractDownload = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/api/contracts/CS5764_Project1.pdf", {
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+                },
+                responseType: 'blob',
+            });
+            const blob = await response.blob();
+            console.log(blob)
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'file.pdf'); // Set desired file name
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error downloading file:', error);
+        }
+    };
+
 
     useEffect(() => {
         const fetchNurseDetails = async () => {
