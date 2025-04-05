@@ -1,0 +1,209 @@
+/*Pop up box for the contract*/
+
+.hire-modal h3 {
+    font-size: 35px;
+    font-weight: 350;
+    text-align: center;
+    margin-bottom: 16px;
+    color: #333;
+}
+
+.hire-modal-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 98.99vw;
+    height: 112vh;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+
+
+.hire-modal label {
+    display: flex;
+    margin-top: 12px;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+
+}
+
+.hire-modal input[type="number"] {
+    width: 100%;
+    padding: 6px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.days-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.confirm-btn {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.confirm-btn:hover {
+    background-color: #219150;
+}
+
+.close-btn {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    z-index: 1001;
+    outline: none;
+}
+
+.close-btn:hover {
+    color: #ff0000;
+}
+
+.hire-modal {
+    position: relative;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 390px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    animation: fadeIn 0.3s ease;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+}
+
+/*Calendar*/
+
+/* Date Picker Styling */
+.date-range-container {
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+}
+
+.date-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.date-field label {
+    margin-bottom: 4px;
+}
+
+.datepicker-input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    color: #333;
+    transition: border-color 0.2s ease;
+}
+
+.datepicker-input:focus {
+    outline: none;
+    /*border-color: #008cff;*/
+    background-color: #fff;
+    box-shadow: 0 0 3px rgba(0, 140, 255, 0.4);
+}
+
+
+
+.react-datepicker {
+    font-size: 14px;
+}
+
+.react-datepicker__header {
+    color: white;
+    border-bottom: none;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+    color: white;
+    font-weight: bold;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+    color: white;
+}
+
+ /*Weeks*/
+.days-btn-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.day-btn {
+    display: none;
+}
+
+.day-label {
+    background-color: transparent;
+    font-size: 18px;
+    color: #008cff;
+    cursor: pointer;
+    border: 2px solid #7cb5e3;
+    border-radius: 20%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease-in-out;
+}
+
+.day-btn:checked + .day-label {
+    background: linear-gradient(147deg, #7AB2D3 35%, #4A628A 74%);
+    color: white;
+    border: none;
+    box-shadow: 0 0 5px rgba(0, 140, 255, 0.5);
+}
+
+
+.date-range-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.date-field {
+    flex: 1;
+}

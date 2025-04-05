@@ -63,6 +63,8 @@ const SignIn = () => {
       const token = data.token;
       localStorage.setItem("jwtToken", token);
 
+
+
       alert("Sign In Successful!");
       navigate("/JobListDashboard");
     } catch (error) {
