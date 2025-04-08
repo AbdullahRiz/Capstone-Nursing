@@ -1,8 +1,12 @@
 package com.nursingapp.system.controllers
 
+import com.nursingapp.system.models.RateRequest
+import com.nursingapp.system.models.Role
 import com.nursingapp.system.models.User
+import com.nursingapp.system.security.JwtUtil
 import com.nursingapp.system.services.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 

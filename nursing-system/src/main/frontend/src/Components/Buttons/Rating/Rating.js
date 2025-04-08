@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import StyledWrapper from './RatingStyles';
 
-const Rating = ({ userName, totalRatings = 0, averageRating = 0 }) => {
+const Rating = ({ userName, userEmail, totalRatings = 0, averageRating = 0 }) => {
     const [selectedRating, setSelectedRating] = useState(null);
     const [hoverRating, setHoverRating] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
     const [review, setReview] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     // Local state to update rating info
     const [localTotal, setLocalTotal] = useState(totalRatings);
@@ -16,16 +18,43 @@ const Rating = ({ userName, totalRatings = 0, averageRating = 0 }) => {
         setShowPopup(true);
     };
 
-    const handleSubmit = () => {
-        // Calculate new average
-        const newTotal = localTotal + 1;
-        const newAverage = ((localAverage * localTotal) + selectedRating) / newTotal;
+    const handleSubmit = async () => {
+        setIsLoading(true);
+        setError(null);
 
-        setLocalTotal(newTotal);
-        setLocalAverage(newAverage);
-        setShowPopup(false);
-        setReview('');
-        alert(`Thank you for rating ${selectedRating}!\nYour Review: ${review}`);
+        try {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) {
+                throw new Error('Not authenticated');
+            }
+
+            const response = await fetch('/api/rate', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    email: userEmail,
+                    rating: selectedRating,
+                    review: review
+                })
+            });
+
+            const data = await response.json()
+
+            setLocalTotal(data.totalRatings);
+            setLocalAverage(data.averageRating);
+            setShowPopup(false);
+            setReview('');
+            alert(`Thank you for your ${selectedRating}-star rating!`);
+
+        } catch (err) {
+            setError(err.response?.data?.message || err.message || 'Rating failed');
+            console.error('Rating error:', err);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -109,7 +138,7 @@ const Rating = ({ userName, totalRatings = 0, averageRating = 0 }) => {
                             onClick={() => handleStarClick(index, false)}
                         />
                         {/* Star display */}
-                        <StarSVG fillType={getStarFill(index, hoverRating ?? selectedRating ?? 0)} />
+                        <StarSVG fillType={getStarFill(index, hoverRating ?? selectedRating ?? localAverage)} />
                     </div>
                 ))}
             </div>
@@ -117,6 +146,7 @@ const Rating = ({ userName, totalRatings = 0, averageRating = 0 }) => {
             {/* Rating Info */}
             <div className="rating-info">
                 <span className="average">{localAverage.toFixed(1)} ({localTotal})</span>
+                {error && <span className={"error"}>{error}</span>}
             </div>
 
             {/* Popup */}
@@ -145,7 +175,9 @@ const Rating = ({ userName, totalRatings = 0, averageRating = 0 }) => {
                                 }
                             }}
                         />
-                        <button onClick={handleSubmit} className="submit">Submit</button>
+                        <button onClick={handleSubmit} className="submit" disabled={isLoading}>
+                            {isLoading ? 'Submitting...' : 'Submit Rating'}
+                        </button>
                     </div>
                 </div>
             )}

@@ -167,6 +167,7 @@ const NurseItem = ({ nurse }) => {
                     name: user.name || "Unknown",
                     email: user.email || "Unknown",
                     rating: user.rating || 0,
+                    ratingHistory: user.ratingHistory || {},
                     specialty: user.nurseDetails?.certifications?.join(", ") || "No specialty",
                     experience: user.nurseDetails?.experienceYears?.toString() + " years" || "No experience",
                     hoursAvailable: nurse.availableHours?.toString() || "No availability",
@@ -199,7 +200,7 @@ const NurseItem = ({ nurse }) => {
                     <p><strong>Specialty:</strong> {nurseDetails.specialty}</p>
                     <p><strong>Experience:</strong> {nurseDetails.experience}</p>
                     <p><strong>Hours Available:</strong> {nurseDetails.hoursAvailable}</p>
-                    <Rating userName={nurseDetails.name} />
+                    <Rating userName={nurseDetails.name} userEmail={nurseDetails.email} totalRatings={Object.keys(nurseDetails.ratingHistory).length} averageRating={nurseDetails.rating} />
                 </div>
             </div>
 
