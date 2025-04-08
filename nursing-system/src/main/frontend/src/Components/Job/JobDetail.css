@@ -1,5 +1,6 @@
 .job-detail-container {
     padding: 20px;
+    min-height: max-content;
     gap: 20px;
     max-width: 1200px;
     margin: 0 auto;
