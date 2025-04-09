@@ -129,3 +129,18 @@
 .reset-button:hover {
     background-color: #5a6268;
 }
+
+.error-text {
+    color: red;
+    font-size: 0.85rem;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+
+.error-text {
+    color: red;
+    font-size: 0.85rem;
+    margin-top: 4px;
+    font-weight: 500;
+}
