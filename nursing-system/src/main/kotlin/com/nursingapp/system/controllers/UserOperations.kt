@@ -42,10 +42,11 @@ class UserOperations(
                     .body(mapOf("error" to "Rating must be between 1 and 5"))
             }
 
-            val updatedUser = userService.updateUserRating(rateRequest.rating, user, userToRate)
+            val updatedUser = userService.updateUserRating(rateRequest.rating, user, userToRate, rateRequest.message)
 
             return ResponseEntity.ok(mapOf(
-                "message" to "${userToRate.role} rated successfully!",
+                "reviewerName" to user.name!!,
+                "message" to rateRequest.message,
                 "averageRating" to updatedUser.rating,
                 "totalRatings" to updatedUser.ratingHistory.size
             ))

@@ -1,6 +1,7 @@
 package com.nursingapp.system.services
 
 import com.nursingapp.system.models.NurseDetails
+import com.nursingapp.system.models.RatingItem
 import com.nursingapp.system.models.Role
 import com.nursingapp.system.models.User
 import com.nursingapp.system.repositories.UserRepository
@@ -67,13 +68,16 @@ class UserService(private val userRepository: UserRepository) {
         val updatedUser = user.copy(nurseDetails = updatedNurseDetails)
         userRepository.save(updatedUser)
     }
-    fun updateUserRating(rating: Int, rater: User, user: User): User {
+    fun updateUserRating(rating: Int, rater: User, user: User, message: String): User {
         // Explicitly create new Map with String keys and Double values
-        val updatedHistory: Map<String, Double> = user.ratingHistory + mapOf(rater.id!! to rating.toDouble())
+        val updatedHistory: Map<String, RatingItem> = user.ratingHistory + mapOf(rater.id!! to RatingItem(
+            reviewerName = rater.name!!,
+            rating = rating.toDouble(),
+            message = message))
 
         // Calculate new average rating
         val newAverage = if (updatedHistory.isNotEmpty()) {
-            updatedHistory.values.average()
+            updatedHistory.values.map { it.rating }.average()
         } else {
             5.0 // default rating
         }

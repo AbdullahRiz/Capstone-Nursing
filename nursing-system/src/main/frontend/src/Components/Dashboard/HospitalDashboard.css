@@ -1,0 +1,289 @@
+/* Import base styles from NurseDashboard.css */
+@import './NurseDashboard.css';
+
+/* Hospital Dashboard specific styles */
+.hospital-dashboard-container {
+    display: flex;
+    flex-direction: column;
+    padding: 40px 60px;
+    background-color: #f7f7f7;
+    min-height: 2vh;
+    gap: 40px;
+}
+
+.hospital-header {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.hospital-profile {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.hospital-profile-picture {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ccc;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.hospital-info {
+    flex: 1;
+}
+
+.hospital-info h2 {
+    margin: 0 0 5px 0;
+    color: #333;
+    font-size: 1.8rem;
+}
+
+.hospital-info p {
+    margin: 0 0 15px 0;
+    color: #666;
+    font-size: 1rem;
+}
+
+.create-job-btn {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.create-job-btn:hover {
+    background-color: #218838;
+}
+
+.dashboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.dashboard-section {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-section h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.applications-list, .offers-list, .nurses-list {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+/* Nurse list styles */
+.nurse-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nurse-item {
+    padding: 20px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+}
+
+.nurse-item:hover {
+    background-color: #f0f8ff;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.nurse-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.nurse-thumbnail {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.nurse-basic-info {
+    flex: 1;
+}
+
+.nurse-name {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.nurse-rating {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.nurse-rating i {
+    color: #f39c12;
+    font-size: 0.9rem;
+}
+
+.rating-value {
+    color: #666;
+    font-size: 0.9rem;
+    margin-left: 5px;
+}
+
+.nurse-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    background-color: #f0f8ff;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.nurse-detail {
+    margin-bottom: 10px;
+}
+
+.hourly-rate {
+    font-weight: 600;
+    color: #28a745;
+}
+
+.nurse-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.view-profile-btn, .create-offer-btn {
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.view-profile-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+.view-profile-btn:hover {
+    background-color: #5a6268;
+}
+
+.create-offer-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.create-offer-btn:hover {
+    background-color: #0069d9;
+}
+
+.cancel-btn {
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    border: none;
+    transition: all 0.2s ease;
+    background-color: #dc3545;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background-color: #c82333;
+}
+
+.offer-recipient {
+    margin-bottom: 15px;
+}
+
+.nurse-name {
+    font-weight: 600;
+    color: #333;
+    margin-left: 5px;
+}
+
+.applicant-count {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    color: #495057;
+}
+
+.applicant-count i {
+    color: #6c757d;
+}
+
+/* Status styles */
+.status-sent {
+    color: #f39c12;
+    font-weight: bold;
+}
+
+.status-accepted {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.status-declined, .status-cancelled {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .hospital-dashboard-container {
+        padding: 20px;
+    }
+    
+    .hospital-profile {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .nurse-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .nurse-actions {
+        flex-direction: column;
+    }
+    
+    .view-profile-btn, .create-offer-btn {
+        width: 100%;
+    }
+}

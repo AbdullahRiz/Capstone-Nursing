@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { createPortal } from 'react-dom';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./HireModel.css";
@@ -145,7 +146,7 @@ const HireModal = ({
         }
     };
 
-    return (
+    return createPortal(
         <div className="hire-modal-overlay" onClick={onClose}>
             <div className="hire-modal" onClick={(e) => e.stopPropagation()}>
                 <button className="close-btn" onClick={onClose}>×</button>
@@ -315,7 +316,8 @@ const HireModal = ({
                     Confirm Hire
                 </button>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

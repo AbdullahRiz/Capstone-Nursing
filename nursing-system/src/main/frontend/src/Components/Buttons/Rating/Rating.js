@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import StyledWrapper from './RatingStyles';
+import { createPortal } from 'react-dom';
+import StyledWrapper, { PopupStyles } from './RatingStyles';
 
 const Rating = ({ userName, userEmail, totalRatings = 0, averageRating = 0 }) => {
     const [selectedRating, setSelectedRating] = useState(null);
@@ -37,7 +38,7 @@ const Rating = ({ userName, userEmail, totalRatings = 0, averageRating = 0 }) =>
                 body: JSON.stringify({
                     email: userEmail,
                     rating: selectedRating,
-                    review: review
+                    message: review
                 })
             });
 
@@ -149,37 +150,40 @@ const Rating = ({ userName, userEmail, totalRatings = 0, averageRating = 0 }) =>
                 {error && <span className={"error"}>{error}</span>}
             </div>
 
-            {/* Popup */}
-            {showPopup && (
-                <div className="popup-overlay" onClick={() => setShowPopup(false)}>
-                    <div className="popup" onClick={(e) => e.stopPropagation()}>
-                        <button className="close-btn" onClick={() => setShowPopup(false)}>×</button>
-                        <h3 className="popup-title">Review <span className="username">({userName})</span></h3>
-                        <div className="popup-stars">
-                            Your Rating
-                            {[0, 1, 2, 3, 4].map((index) => (
-                                <StarSVG
-                                    key={index}
-                                    fillType={getStarFill(index, selectedRating ?? 0)}
-                                />
-                            ))}
+            {/* Popup - Using Portal to render at document body level */}
+            {showPopup && createPortal(
+                <PopupStyles>
+                    <div className="popup-overlay" onClick={() => setShowPopup(false)}>
+                        <div className="popup" onClick={(e) => e.stopPropagation()}>
+                            <button className="close-btn" onClick={() => setShowPopup(false)}>×</button>
+                            <h3 className="popup-title">Review <span className="username">({userName})</span></h3>
+                            <div className="popup-stars">
+                                Your Rating
+                                {[0, 1, 2, 3, 4].map((index) => (
+                                    <StarSVG
+                                        key={index}
+                                        fillType={getStarFill(index, selectedRating ?? 0)}
+                                    />
+                                ))}
+                            </div>
+                            <textarea
+                                placeholder={`Please share how was your experience with ${userName}...`}
+                                value={review}
+                                onChange={(e) => setReview(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                        e.preventDefault();
+                                        handleSubmit();
+                                    }
+                                }}
+                            />
+                            <button onClick={handleSubmit} className="submit" disabled={isLoading}>
+                                {isLoading ? 'Submitting...' : 'Submit Rating'}
+                            </button>
                         </div>
-                        <textarea
-                            placeholder={`Please share how was your experience with ${userName}...`}
-                            value={review}
-                            onChange={(e) => setReview(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' && !e.shiftKey) {
-                                    e.preventDefault();
-                                    handleSubmit();
-                                }
-                            }}
-                        />
-                        <button onClick={handleSubmit} className="submit" disabled={isLoading}>
-                            {isLoading ? 'Submitting...' : 'Submit Rating'}
-                        </button>
                     </div>
-                </div>
+                </PopupStyles>,
+                document.body
             )}
         </StyledWrapper>
     );
