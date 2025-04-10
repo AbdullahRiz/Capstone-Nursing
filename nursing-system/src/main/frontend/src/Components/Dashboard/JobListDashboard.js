@@ -22,7 +22,57 @@ const JobListDashboard = () => {
         maxPay: "",
     });
 
-    const fetchJobApplications = async (filterParams) => {
+    // Fetch data only once on component mount
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const token = localStorage.getItem("jwtToken");
+                
+                // Make both API calls in parallel
+                const [userResponse, jobsResponse] = await Promise.all([
+                    fetch("/api/getUserDetails", {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }),
+                    fetch("/api/listJobApplications", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({}),
+                    })
+                ]);
+                
+                if (!userResponse.ok) {
+                    throw new Error("Failed to fetch user details");
+                }
+                
+                if (!jobsResponse.ok) {
+                    throw new Error("Failed to fetch job applications");
+                }
+                
+                const userData = await userResponse.json();
+                const jobsData = await jobsResponse.json();
+                
+                setUser(userData);
+                setJobApplications(jobsData);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        
+        fetchData();
+    }, []);
+    
+    // Function to fetch job applications with filters
+    const fetchFilteredJobApplications = async (filterParams) => {
         setLoading(true);
         try {
             const token = localStorage.getItem("jwtToken");
@@ -48,38 +98,6 @@ const JobListDashboard = () => {
         }
     };
 
-    const fetchUserDetails = async () => {
-        setLoading(true);
-        try {
-            const token = localStorage.getItem("jwtToken");
-            const response = await fetch("/api/getUserDetails", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to fetch user details");
-            }
-
-            const user = await response.json();
-            setUser(user);
-        } catch (err) {
-            setError(err.message);
-        }
-        setLoading(false);
-    };
-
-    useEffect(() => {
-        fetchJobApplications({});
-    }, []);
-
-    useEffect(() => {
-        fetchUserDetails();
-    }, []);
-
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters((prevFilters) => ({
@@ -100,7 +118,7 @@ const JobListDashboard = () => {
             minPay: filters.minPay ? parseFloat(filters.minPay) : null,
             maxPay: filters.maxPay ? parseFloat(filters.maxPay) : null,
         };
-        fetchJobApplications(filterParams);
+        fetchFilteredJobApplications(filterParams);
     };
 
     const handleReset = () => {
@@ -114,7 +132,7 @@ const JobListDashboard = () => {
             minPay: "",
             maxPay: "",
         });
-        fetchJobApplications({});
+        fetchFilteredJobApplications({});
     };
 
     if (loading) return <p>Loading...</p>;

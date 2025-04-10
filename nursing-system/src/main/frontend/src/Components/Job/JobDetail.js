@@ -34,68 +34,72 @@ const JobDetail = () => {
         hoursAvailable: "",
     });
 
-    // Fetch job details from the API
-    const fetchJobDetails = async () => {
-        try {
-            const token = localStorage.getItem("jwtToken");
-            const response = await fetch(`/api/jobApplication/${id}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to fetch job details");
-            }
-
-            const data = await response.json();
-            setJob(data); // Set the fetched job details
-
-            // Fetch the current user's details
-            const userResponse = await fetch("/api/getUserDetails", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (!userResponse.ok) {
-                throw new Error("Failed to fetch user details");
-            }
-
-            const user = await userResponse.json();
-
-            // Store the current user's ID
-            setCurrentUserId(user.id);
-            
-            // Check if the current user is the author of the job
-            if (user.role === "HOSPITAL" && user.id === data.hospitalId) {
-                setIsAuthor(true);
-            }
-            
-            // Check if the current user is a nurse
-            if (user.role === "NURSE") {
-                setIsNurse(true);
-                
-                // Check if the nurse has already applied to this job
-                const hasAlreadyApplied = data.applicants.some(
-                    applicant => applicant.applicantId === user.id
-                );
-                setHasApplied(hasAlreadyApplied);
-            }
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // Fetch job details on initial render
+    // Fetch job details and user details in parallel
     useEffect(() => {
-        fetchJobDetails();
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const token = localStorage.getItem("jwtToken");
+                
+                // Fetch job details and user details in parallel
+                const [jobResponse, userResponse] = await Promise.all([
+                    fetch(`/api/jobApplication/${id}`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }),
+                    fetch("/api/getUserDetails", {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                    })
+                ]);
+                
+                if (!jobResponse.ok) {
+                    throw new Error("Failed to fetch job details");
+                }
+                
+                if (!userResponse.ok) {
+                    throw new Error("Failed to fetch user details");
+                }
+                
+                // Parse responses
+                const jobData = await jobResponse.json();
+                const userData = await userResponse.json();
+                
+                // Update state with job data
+                setJob(jobData);
+                
+                // Store the current user's ID
+                setCurrentUserId(userData.id);
+                
+                // Check if the current user is the author of the job
+                if (userData.role === "HOSPITAL" && userData.id === jobData.hospitalId) {
+                    setIsAuthor(true);
+                }
+                
+                // Check if the current user is a nurse
+                if (userData.role === "NURSE") {
+                    setIsNurse(true);
+                    
+                    // Check if the nurse has already applied to this job
+                    const hasAlreadyApplied = jobData.applicants.some(
+                        applicant => applicant.applicantId === userData.id
+                    );
+                    setHasApplied(hasAlreadyApplied);
+                }
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        
+        fetchData();
     }, [id]);
 
     // Handle day selection for application

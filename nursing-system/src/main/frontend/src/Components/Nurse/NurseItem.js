@@ -146,45 +146,63 @@ const NurseItem = ({ nurse, job }) => {
 
 
     useEffect(() => {
-        const fetchNurseDetails = async () => {
-            try {
-                const token = localStorage.getItem("jwtToken");
-                const response = await fetch(`/api/getUserById/${nurse.applicantId}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+        // Add a small delay to stagger API calls and prevent overwhelming the server
+        const timeoutId = setTimeout(() => {
+            const fetchNurseDetails = async () => {
+                try {
+                    // Check if we already have this nurse's details in sessionStorage
+                    const cachedNurse = sessionStorage.getItem(`nurse_${nurse.applicantId}`);
+                    
+                    if (cachedNurse) {
+                        // Use cached data if available
+                        setNurseDetails(JSON.parse(cachedNurse));
+                        setLoading(false);
+                        return;
+                    }
+                    
+                    const token = localStorage.getItem("jwtToken");
+                    const response = await fetch(`/api/getUserById/${nurse.applicantId}`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
 
-                if (!response.ok) {
-                    throw new Error("Failed to fetch nurse details");
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch nurse details");
+                    }
+
+                    const user = await response.json();
+
+                    const mappedNurse = {
+                        name: user.name || "Unknown",
+                        email: user.email || "Unknown",
+                        rating: user.rating || 0,
+                        ratingHistory: user.ratingHistory || {},
+                        specialty: user.nurseDetails?.certifications?.join(", ") || "No specialty",
+                        experience: user.nurseDetails?.experienceYears?.toString() + " years" || "No experience",
+                        hoursAvailable: nurse.availableHours?.toString() || "No availability",
+                        profilePicture: user.profilePicture || defaultProfilePicture,
+                    };
+
+                    // Cache the nurse details in sessionStorage
+                    sessionStorage.setItem(`nurse_${nurse.applicantId}`, JSON.stringify(mappedNurse));
+                    
+                    setNurseDetails(mappedNurse);
+                    setIsHired(false); // Always start with not hired until popup confirms
+
+                } catch (err) {
+                    setError(err.message);
+                } finally {
+                    setLoading(false);
                 }
+            };
 
-                const user = await response.json();
-
-                const mappedNurse = {
-                    name: user.name || "Unknown",
-                    email: user.email || "Unknown",
-                    rating: user.rating || 0,
-                    ratingHistory: user.ratingHistory || {},
-                    specialty: user.nurseDetails?.certifications?.join(", ") || "No specialty",
-                    experience: user.nurseDetails?.experienceYears?.toString() + " years" || "No experience",
-                    hoursAvailable: nurse.availableHours?.toString() || "No availability",
-                    profilePicture: user.profilePicture || defaultProfilePicture,
-                };
-
-                setNurseDetails(mappedNurse);
-                setIsHired(false); // Always start with not hired until popup confirms
-
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchNurseDetails();
+            fetchNurseDetails();
+        }, Math.random() * 300); // Random delay between 0-300ms to stagger requests
+        
+        return () => clearTimeout(timeoutId);
     }, [nurse.applicantId]);
 
     if (loading) return <p>Loading...</p>;
