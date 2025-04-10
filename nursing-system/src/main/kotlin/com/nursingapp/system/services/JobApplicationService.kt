@@ -1,9 +1,7 @@
 package com.nursingapp.system.services
 
-import com.nursingapp.system.models.Applicant
 import com.nursingapp.system.models.JobApplication
 import com.nursingapp.system.models.JobApplicationFilter
-import com.nursingapp.system.models.VisibilityStatus
 import com.nursingapp.system.repositories.JobApplicationRepository
 
 import org.springframework.stereotype.Service

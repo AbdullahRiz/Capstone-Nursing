@@ -172,7 +172,6 @@ class CreateJobApplicationApi(
         val user = userResponse.body!!
         val appliedJobs = jobApplicationService.getJobApplicationsByIds(user.nurseDetails?.appliedJobsIds!!)
 
-
         return ResponseEntity.ok(appliedJobs)
     }
 

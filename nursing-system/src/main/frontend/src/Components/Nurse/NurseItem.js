@@ -4,7 +4,7 @@ import defaultProfilePicture from "../../Assets/default-user-photo.png";
 import Rating from "../Buttons/Rating/Rating";
 import HireModal from "../Job/Contract/HireModel";
 
-const NurseItem = ({ nurse }) => {
+const NurseItem = ({ nurse, job }) => {
     const [nurseDetails, setNurseDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -227,6 +227,8 @@ const NurseItem = ({ nurse }) => {
                 setFormData={setFormData}
                 setIsHired={setIsHired}
                 setShowHireModal={setShowHireModal}
+                job={job}
+                nurseId={nurse.applicantId}
             />
         </div>
     );

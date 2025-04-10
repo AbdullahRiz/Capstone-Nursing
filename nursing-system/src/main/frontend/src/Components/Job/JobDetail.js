@@ -138,7 +138,11 @@ const JobDetail = () => {
                             <h2>Applicants</h2>
                             {filteredApplicants.length > 0 ? (
                                 filteredApplicants.map((nurse) => (
-                                    <NurseItem key={nurse.applicantId} nurse={nurse} />
+                                    <NurseItem
+                                        key={nurse.applicantId}
+                                        nurse={nurse}
+                                        job={job}
+                                    />
                                 ))
                             ) : (
                                 <p>No applicants match the filters.</p>
@@ -154,6 +158,3 @@ const JobDetail = () => {
 
 
 export default JobDetail;
-
-
-// localhost:8080/api/create-checkout-session
