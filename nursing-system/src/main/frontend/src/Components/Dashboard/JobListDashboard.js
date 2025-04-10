@@ -6,11 +6,12 @@ import JobApplicationCard from "../Job/JobApplicationCard";
 import Footer from "../Footer/Footer";
 
 const JobListDashboard = () => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(null)
     const [jobApplications, setJobApplications] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true); // State to handle loading
+    const [error, setError] = useState(null); // State to handle errors
 
+    // State for filters
     const [filters, setFilters] = useState({
         skillSet: "",
         minimumHours: "",
@@ -29,6 +30,7 @@ const JobListDashboard = () => {
         maxPay: "",
     });
 
+    // Fetch job applications from the API
     const fetchJobApplications = async (filterParams) => {
         setLoading(true);
         try {
@@ -47,7 +49,7 @@ const JobListDashboard = () => {
             }
 
             const data = await response.json();
-            setJobApplications(data);
+            setJobApplications(data); // Set the fetched job applications
         } catch (err) {
             setError(err.message);
         } finally {
@@ -85,6 +87,7 @@ const JobListDashboard = () => {
         setLoading(false);
     };
 
+    // Fetch job applications on initial render
     useEffect(() => {
         fetchJobApplications({});
     }, []);
@@ -93,6 +96,7 @@ const JobListDashboard = () => {
         fetchUserDetails();
     }, []);
 
+    // Handle filter changes
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters((prevFilters) => ({
@@ -106,6 +110,7 @@ const JobListDashboard = () => {
         }));
     };
 
+    // Handle filter submission
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -168,6 +173,7 @@ const JobListDashboard = () => {
         fetchJobApplications(filterParams);
     };
 
+    // Handle filter reset
     const handleReset = () => {
         setFilters({
             skillSet: "",
@@ -225,6 +231,7 @@ const JobListDashboard = () => {
     return (
         <>
             <div className="dashboard-container">
+                {/* Filter Form Component */}
                 <FilterForm
                     filters={filters}
                     onFilterChange={handleFilterChange}
@@ -233,12 +240,14 @@ const JobListDashboard = () => {
                     fieldErrors={fieldErrors}
                 />
 
+                {/* Main Content */}
                 <main className="main-content">
                     <header className="dashboard-header">
                         <div>
                             <h1>Job Applications</h1>
                             <p>Hello, {user.name || "Guest"}</p>
                         </div>
+
                     </header>
 
                     <div className="upload-section">

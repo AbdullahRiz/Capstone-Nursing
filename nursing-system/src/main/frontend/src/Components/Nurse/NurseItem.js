@@ -1,35 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "./NurseItem.css";
 import defaultProfilePicture from "../../Assets/default-user-photo.png";
-import Rating from "../Buttons/Rating/Rating";
-import HireModal from "../Job/Contract/HireModel";
+
 
 const NurseItem = ({ nurse }) => {
     const [nurseDetails, setNurseDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isHired, setIsHired] = useState(false);
-    const [showHireModal, setShowHireModal] = useState(false);
-    const [formData, setFormData] = useState({
-        amount: '',
-        days: '',
-        hoursPerDay: '',
-        selectedDays: [],
-    });
 
-    const handleHireClick = () => {
-        setShowHireModal(true);
-    };
-    const [selectedFile, setSelectedFile] = useState(null);
-
-    const handleSubmitHire = async () => {
-        // Basic form validation (optional but recommended)
-        if (!formData.amount || !formData.days || !formData.hoursPerDay || formData.selectedDays.length === 0) {
-            alert("Please fill out all fields before submitting.");
-            return;
-        }
-
-        try {
+    const handleHireClick = async () => {
+         try {
             const response = await fetch("http://localhost:8080/api/hireNurse", {
                 method: "POST",
                 headers: {
@@ -37,23 +18,13 @@ const NurseItem = ({ nurse }) => {
                     "Authorization": "Bearer " + localStorage.getItem("jwtToken")
                 },
                 body: JSON.stringify({
-                    email: nurseDetails.email,
-                    ...formData
+                    email: nurseDetails.email, // You can customize this per nurse/job
                 })
             });
 
             const data = await response.json();
-            console.log("Hire response", data);
 
-            // Set to hired only after successful submission
             setIsHired(true);
-            setShowHireModal(false);
-            setFormData({
-                amount: '',
-                days: '',
-                hoursPerDay: '',
-                selectedDays: [],
-            });
 
         } catch (error) {
             console.error("Hiring error:", error);
@@ -70,15 +41,16 @@ const NurseItem = ({ nurse }) => {
                     "Authorization": "Bearer " + localStorage.getItem("jwtToken")
                 },
                 body: JSON.stringify({
-                    amount: formData.amount || 2000, // fallback
+                    amount: 2000, // You can customize this per nurse/job
                     applicantId: nurse.applicantId,
                     jobId: nurse.jobId
                 })
             });
 
             const data = await response.json();
+
             if (data.url) {
-                window.location.href = data.url;
+                window.location.href = data.url; // Redirect to Stripe Checkout
             } else {
                 alert("Checkout failed: " + data.message);
             }
@@ -87,63 +59,6 @@ const NurseItem = ({ nurse }) => {
             alert("An error occurred during payment.");
         }
     };
-
-    const handleFileChange = (event) => {
-        setSelectedFile(event.target.files[0]);
-    };
-
-    const handleContractUpload = async () => {
-        if (!selectedFile) {
-            alert('Please select a contract to upload.');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('file', selectedFile);
-
-        try {
-            const response = await fetch('/api/uploadContract', {
-                headers: {
-                    "Authorization": "Bearer " + localStorage.getItem("jwtToken")
-                },
-                method: 'POST',
-                body: formData,
-            });
-
-            if (response.ok) {
-                alert('Contract uploaded successfully!');
-            } else {
-                alert('Contract upload failed.');
-            }
-        } catch (error) {
-            console.error('Error uploading file:', error);
-            alert('An error occurred during contract upload.');
-        }
-    };
-
-    const handleContractDownload = async () => {
-        try {
-            const response = await fetch("http://localhost:8080/api/contracts/CS5764_Project1.pdf", {
-                headers: {
-                    "Authorization": "Bearer " + localStorage.getItem("jwtToken")
-                },
-                responseType: 'blob',
-            });
-            const blob = await response.blob();
-            console.log(blob)
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'file.pdf'); // Set desired file name
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        } catch (error) {
-            console.error('Error downloading file:', error);
-        }
-    };
-
 
     useEffect(() => {
         const fetchNurseDetails = async () => {
@@ -167,16 +82,15 @@ const NurseItem = ({ nurse }) => {
                     name: user.name || "Unknown",
                     email: user.email || "Unknown",
                     rating: user.rating || 0,
-                    ratingHistory: user.ratingHistory || {},
                     specialty: user.nurseDetails?.certifications?.join(", ") || "No specialty",
                     experience: user.nurseDetails?.experienceYears?.toString() + " years" || "No experience",
-                    hoursAvailable: nurse.availableHours?.toString() || "No availability",
+                    hoursAvailable: nurse.availableHours.toString() || "No availability",
                     profilePicture: user.profilePicture || defaultProfilePicture,
+                    isHired: user.nurseDetails?.isHired
                 };
 
                 setNurseDetails(mappedNurse);
-                setIsHired(false); // Always start with not hired until popup confirms
-
+                setIsHired(mappedNurse.isHired)
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -200,34 +114,21 @@ const NurseItem = ({ nurse }) => {
                     <p><strong>Specialty:</strong> {nurseDetails.specialty}</p>
                     <p><strong>Experience:</strong> {nurseDetails.experience}</p>
                     <p><strong>Hours Available:</strong> {nurseDetails.hoursAvailable}</p>
-                    <Rating userName={nurseDetails.name} userEmail={nurseDetails.email} totalRatings={Object.keys(nurseDetails.ratingHistory).length} averageRating={nurseDetails.rating} />
                 </div>
             </div>
-
             <div className="button-container">
-                <button
-                    className={`hire-button ${isHired ? "hired" : ""}`}
-                    onClick={handleHireClick}
-                    disabled={isHired}
-                >
-                    {isHired ? "Hired" : "Hire"}
-                </button>
+            <button
+                className={`hire-button ${isHired ? "hired" : ""}`}
+                onClick={handleHireClick}
+                disabled={isHired}
+            >
+                {isHired ? "Hired" : "Hire"}
+            </button>
 
-                {isHired && (
-                    <button className="Paybutton" onClick={handlePayClick}>
-                        Pay
-                    </button>
-                )}
+            {isHired && (
+                <button className="Paybutton" onClick={handlePayClick}>Pay</button>
+            )}
             </div>
-
-            <HireModal
-                visible={showHireModal}
-                onClose={() => setShowHireModal(false)}
-                formData={formData}
-                setFormData={setFormData}
-                setIsHired={setIsHired}
-                setShowHireModal={setShowHireModal}
-            />
         </div>
     );
 };

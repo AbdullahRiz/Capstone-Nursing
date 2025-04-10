@@ -18,8 +18,8 @@ class PaymentController {
         Stripe.apiKey = stripeApiKey
         val params = SessionCreateParams.builder()
             .setMode(SessionCreateParams.Mode.PAYMENT)
-            .setSuccessUrl("http://localhost:3000/JobListDashboard")
-            .setCancelUrl("http://localhost:3000/JobListDashboard")
+            .setSuccessUrl("http://localhost:3000/Dummy")
+            .setCancelUrl("http://localhost:3000/Dummy")
             .addLineItem(
                 SessionCreateParams.LineItem.builder()
                     .setPriceData(

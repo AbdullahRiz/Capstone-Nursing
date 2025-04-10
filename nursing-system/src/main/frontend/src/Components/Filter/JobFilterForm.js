@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./FilterForm.css";
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 
-const FilterForm = ({ filters, onFilterChange, onSubmit, onReset, fieldErrors }) => {
+const FilterForm = ({ filters, onFilterChange, onSubmit, onReset }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const toggleExpand = () => {
@@ -14,10 +14,11 @@ const FilterForm = ({ filters, onFilterChange, onSubmit, onReset, fieldErrors })
             <div className="filter-header" onClick={toggleExpand}>
                 <h5>Filter Applications</h5>
                 <button className="toggle-button">
-                    {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
+                        {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
                 </button>
             </div>
 
+            {/* Form Content */}
             {isExpanded && (
                 <form onSubmit={onSubmit} className="filter-form">
                     <div className="form-group">
@@ -25,6 +26,7 @@ const FilterForm = ({ filters, onFilterChange, onSubmit, onReset, fieldErrors })
                         <input
                             type="text"
                             name="skillSet"
+                            placeholder="e.g., Pediatrics"
                             value={filters.skillSet}
                             onChange={onFilterChange}
                         />
@@ -35,12 +37,10 @@ const FilterForm = ({ filters, onFilterChange, onSubmit, onReset, fieldErrors })
                         <input
                             type="number"
                             name="minimumHours"
+                            placeholder="e.g., 20"
                             value={filters.minimumHours}
                             onChange={onFilterChange}
                         />
-                        {fieldErrors?.minimumHours && (
-                            <div className="error-text">{fieldErrors.minimumHours}</div>
-                        )}
                     </div>
 
                     <div className="form-group">
@@ -48,12 +48,10 @@ const FilterForm = ({ filters, onFilterChange, onSubmit, onReset, fieldErrors })
                         <input
                             type="number"
                             name="maximumHours"
+                            placeholder="e.g., 40"
                             value={filters.maximumHours}
                             onChange={onFilterChange}
                         />
-                        {fieldErrors?.maximumHours && (
-                            <div className="error-text">{fieldErrors.maximumHours}</div>
-                        )}
                     </div>
 
                     <div className="form-group">
@@ -61,6 +59,7 @@ const FilterForm = ({ filters, onFilterChange, onSubmit, onReset, fieldErrors })
                         <input
                             type="text"
                             name="hospitalId"
+                            placeholder="e.g., H123"
                             value={filters.hospitalId}
                             onChange={onFilterChange}
                         />
@@ -91,12 +90,10 @@ const FilterForm = ({ filters, onFilterChange, onSubmit, onReset, fieldErrors })
                         <input
                             type="number"
                             name="minPay"
+                            placeholder="e.g., 25.0"
                             value={filters.minPay}
                             onChange={onFilterChange}
                         />
-                        {fieldErrors?.minPay && (
-                            <div className="error-text">{fieldErrors.minPay}</div>
-                        )}
                     </div>
 
                     <div className="form-group">
@@ -104,17 +101,23 @@ const FilterForm = ({ filters, onFilterChange, onSubmit, onReset, fieldErrors })
                         <input
                             type="number"
                             name="maxPay"
+                            placeholder="e.g., 50.0"
                             value={filters.maxPay}
                             onChange={onFilterChange}
                         />
-                        {fieldErrors?.maxPay && (
-                            <div className="error-text">{fieldErrors.maxPay}</div>
-                        )}
                     </div>
 
                     <div className="form-actions">
-                        <button type="submit" className="filter-button">Apply Filters</button>
-                        <button type="button" className="reset-button" onClick={onReset}>Reset Filters</button>
+                        <button type="submit" className="filter-button">
+                            Apply Filters
+                        </button>
+                        <button
+                            type="button"
+                            className="reset-button"
+                            onClick={onReset}
+                        >
+                            Reset Filters
+                        </button>
                     </div>
                 </form>
             )}

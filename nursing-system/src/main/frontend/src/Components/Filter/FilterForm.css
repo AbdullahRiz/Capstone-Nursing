@@ -16,7 +16,7 @@
 
 /* EXPAND mode (height large enough for full content) */
 .filter-container.expanded {
-    height: 100%; /* adjust this if you prefer fixed height */
+    height: auto; /* adjust this if you prefer fixed height */
 }
 
 /* Header always visible */
