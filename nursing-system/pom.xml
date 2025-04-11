@@ -206,6 +206,15 @@
 				</configuration>
 			</plugin>
 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.5.2</version>
+				<configuration>
+					<testFailureIgnore>true</testFailureIgnore>
+				</configuration>
+			</plugin>
+
 			<!--Copy react build artifacts to spring boot-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

@@ -4,6 +4,8 @@ import Home from "../Home/Home";
 import { Link } from "react-router-dom";
 
 const Navigation = () => {
+  // Check if user is logged in without making API calls
+  const isLoggedIn = localStorage.getItem("jwtToken") !== null;
   return (
     <div className="collapse navbar-collapse" id="navbarNav">
       <ul className="navbar-nav">
@@ -12,6 +14,26 @@ const Navigation = () => {
             Home
           </Link>
         </li>
+        {isLoggedIn && (
+          <>
+            <li className="nav-item">
+              <Link 
+                className="nav-link" 
+                to="/dashboard"
+              >
+                Dashboard
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link 
+                className="nav-link" 
+                to="/jobListDashboard"
+              >
+                Jobs
+              </Link>
+            </li>
+          </>
+        )}
         <li className="nav-item">
           <Link className="nav-link" to="/about">
             About

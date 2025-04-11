@@ -11,9 +11,15 @@ data class User(
     val name: String? = null,
     val role: Role,
     val rating: Double = 5.0,
-    val ratingHistory: Map<String, Double> = emptyMap(),
+    val ratingHistory: Map<String, RatingItem> = emptyMap(),
     val nurseDetails: NurseDetails? = null,
     val hospitalDetails: HospitalDetails? = null,
+)
+
+data class RatingItem(
+    val reviewerName: String,
+    val rating: Double,
+    val message: String,
 )
 
 data class NurseDetails(

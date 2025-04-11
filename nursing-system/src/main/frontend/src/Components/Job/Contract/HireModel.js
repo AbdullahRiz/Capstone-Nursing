@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { createPortal } from 'react-dom';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./HireModel.css";
@@ -10,6 +11,8 @@ const HireModal = ({
                        setFormData,
                        setIsHired,
                        setShowHireModal,
+                       job,
+                       nurseId,
                    }) => {
     const [useCustomAmount, setUseCustomAmount] = useState(false);
     const [useCustomHours, setUseCustomHours] = useState(false);
@@ -54,8 +57,8 @@ const HireModal = ({
         return false;
     };
 
-    const handleConfirmHire = () => {
-        const { amount, startDate, endDate, hoursPerDay, selectedDays } = formData;
+    const handleConfirmHire = async () => {
+        const {amount, startDate, endDate, hoursPerDay, selectedDays} = formData;
         const selectedLength = selectedDays.length;
         const isThreeConsecutive = areThreeDaysConsecutive(selectedDays);
 
@@ -105,14 +108,45 @@ const HireModal = ({
             }
         }
 
-        setTimeout(() => {
-            setIsHired(true);
-            setShowHireModal(false);
-            alert("Hired successfully! (Simulated)");
-        }, 500);
+        const payload = {
+            jobTitle: job.jobTitle,
+            nurseId: nurseId,
+            jobApplicationId: job.id,
+            pay: amount,
+            hours: parseInt(hoursPerDay),
+            days: selectedDays,
+            startDate: new Date(startDate).toISOString(),
+            endDate: new Date(endDate).toISOString(),
+            contractFileName: "default-contract.pdf" // update this with actual upload logic
+        }
+
+        try {
+            const res = await fetch("/api/jobOffer", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) {
+                const msg = await res.text();
+                alert("Failed to create offer: " + msg);
+                return;
+            }
+
+            setTimeout(() => {
+                setIsHired(true);
+                setShowHireModal(false);
+                alert("Hired successfully! (Simulated)");
+            }, 500);
+        } catch (err) {
+            console.error("API error: ", err)
+        }
     };
 
-    return (
+    return createPortal(
         <div className="hire-modal-overlay" onClick={onClose}>
             <div className="hire-modal" onClick={(e) => e.stopPropagation()}>
                 <button className="close-btn" onClick={onClose}>×</button>
@@ -282,7 +316,8 @@ const HireModal = ({
                     Confirm Hire
                 </button>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

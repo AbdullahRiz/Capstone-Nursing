@@ -6,7 +6,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import Dummy from "../Home/Dummy";
 import JobListDashboard from "../Dashboard/JobListDashboard";
 
-const SignIn = () => {
+const SignIn = ({ setIsLoggedIn }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -65,6 +65,9 @@ const SignIn = () => {
 
 
 
+      // Update the isLoggedIn state
+      setIsLoggedIn(true);
+      
       alert("Sign In Successful!");
       navigate("/JobListDashboard");
     } catch (error) {

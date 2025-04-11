@@ -1,8 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./JobApplicationCard.css";
 import { Link } from "react-router-dom";
 
 const JobApplicationCard = ({ id, title, applicants, targetDate, updatedAt, isHired }) => {
+    const [isHospital, setIsHospital] = useState(false);
+    
+    useEffect(() => {
+        // Check if the current user is a hospital
+        const checkUserRole = async () => {
+            try {
+                const token = localStorage.getItem("jwtToken");
+                if (!token) return;
+                
+                const response = await fetch("/api/getUserDetails", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                
+                if (!response.ok) return;
+                
+                const userData = await response.json();
+                setIsHospital(userData.role === "HOSPITAL");
+            } catch (err) {
+                console.error("Error checking user role:", err);
+            }
+        };
+        
+        checkUserRole();
+    }, []);
     return (
         <Link to={`/job/${id}`} className="application-card-link">
             <div className="application-card" key={id}>
@@ -17,9 +45,11 @@ const JobApplicationCard = ({ id, title, applicants, targetDate, updatedAt, isHi
                     <p><strong>Target Date:</strong> {targetDate}</p>
                 </div>
 
-                <button className={`hire ${isHired ? "disabled" : ""}`}>
-                    {isHired ? "View" : "Hire"}
-                </button>
+                {isHospital && (
+                    <button className={`hire ${isHired ? "disabled" : ""}`}>
+                        {isHired ? "View" : "Hire"}
+                    </button>
+                )}
             </div>
         </Link>
     );
