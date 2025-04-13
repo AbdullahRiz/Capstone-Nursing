@@ -209,3 +209,9 @@ select {
 .date-field {
     flex: 1;
 }
+
+.upload-contract-field {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

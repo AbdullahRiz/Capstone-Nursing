@@ -18,8 +18,8 @@ class PaymentController {
         Stripe.apiKey = stripeApiKey
         val params = SessionCreateParams.builder()
             .setMode(SessionCreateParams.Mode.PAYMENT)
-            .setSuccessUrl("http://localhost:3000/JobListDashboard")
-            .setCancelUrl("http://localhost:3000/JobListDashboard")
+            .setSuccessUrl("http://localhost:3000/job/${checkoutRequest.jobId}")
+            .setCancelUrl("http://localhost:3000/job/${checkoutRequest.jobId}")
             .addLineItem(
                 SessionCreateParams.LineItem.builder()
                     .setPriceData(
@@ -55,4 +55,6 @@ data class CheckoutResponse(
 
 data class CheckoutRequest(
     val amount: Long,
+    val applicantId: String,
+    val jobId: String
 )

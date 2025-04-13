@@ -22,45 +22,6 @@ const NurseItem = ({ nurse, job }) => {
     };
     const [selectedFile, setSelectedFile] = useState(null);
 
-    const handleSubmitHire = async () => {
-        // Basic form validation (optional but recommended)
-        if (!formData.amount || !formData.days || !formData.hoursPerDay || formData.selectedDays.length === 0) {
-            alert("Please fill out all fields before submitting.");
-            return;
-        }
-
-        try {
-            const response = await fetch("http://localhost:8080/api/hireNurse", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("jwtToken")
-                },
-                body: JSON.stringify({
-                    email: nurseDetails.email,
-                    ...formData
-                })
-            });
-
-            const data = await response.json();
-            console.log("Hire response", data);
-
-            // Set to hired only after successful submission
-            setIsHired(true);
-            setShowHireModal(false);
-            setFormData({
-                amount: '',
-                days: '',
-                hoursPerDay: '',
-                selectedDays: [],
-            });
-
-        } catch (error) {
-            console.error("Hiring error:", error);
-            alert("An error occurred during hiring.");
-        }
-    };
-
     const handlePayClick = async () => {
         try {
             const response = await fetch("http://localhost:8080/api/create-checkout-session", {
@@ -72,7 +33,7 @@ const NurseItem = ({ nurse, job }) => {
                 body: JSON.stringify({
                     amount: formData.amount || 2000, // fallback
                     applicantId: nurse.applicantId,
-                    jobId: nurse.jobId
+                    jobId: job.id
                 })
             });
 
@@ -152,11 +113,13 @@ const NurseItem = ({ nurse, job }) => {
                 try {
                     // Check if we already have this nurse's details in sessionStorage
                     const cachedNurse = sessionStorage.getItem(`nurse_${nurse.applicantId}`);
-                    
+
                     if (cachedNurse) {
                         // Use cached data if available
-                        setNurseDetails(JSON.parse(cachedNurse));
+                        const jsonNurse = JSON.parse(cachedNurse)
+                        setNurseDetails(jsonNurse);
                         setLoading(false);
+                        setIsHired(jsonNurse.isHired);
                         return;
                     }
                     
@@ -184,13 +147,14 @@ const NurseItem = ({ nurse, job }) => {
                         experience: user.nurseDetails?.experienceYears?.toString() + " years" || "No experience",
                         hoursAvailable: nurse.availableHours?.toString() || "No availability",
                         profilePicture: user.profilePicture || defaultProfilePicture,
+                        isHired: user.nurseDetails?.isHired,
                     };
 
                     // Cache the nurse details in sessionStorage
                     sessionStorage.setItem(`nurse_${nurse.applicantId}`, JSON.stringify(mappedNurse));
                     
                     setNurseDetails(mappedNurse);
-                    setIsHired(false); // Always start with not hired until popup confirms
+                    setIsHired(mappedNurse.isHired); // Always start with not hired until popup confirms
 
                 } catch (err) {
                     setError(err.message);
@@ -247,6 +211,7 @@ const NurseItem = ({ nurse, job }) => {
                 setShowHireModal={setShowHireModal}
                 job={job}
                 nurseId={nurse.applicantId}
+                nurseEmail={nurseDetails.email}
             />
         </div>
     );

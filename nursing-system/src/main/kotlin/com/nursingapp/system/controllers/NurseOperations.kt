@@ -4,16 +4,19 @@ import com.nursingapp.system.models.RateRequest
 import com.nursingapp.system.models.Role
 import com.nursingapp.system.models.User
 import com.nursingapp.system.security.JwtUtil
+import com.nursingapp.system.services.ContractStorageService
 import com.nursingapp.system.services.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @RequestMapping("/api")
 @RestController
 class NurseOperations (
     @Autowired val userService: UserService,
+    private val contractStorageService: ContractStorageService
 ) {
     @GetMapping("/searchNurses")
     fun searchNurses(
@@ -44,6 +47,14 @@ class NurseOperations (
 
         userService.updateNurseHourlyRate(hourlyRateRequest.hourlyRate, nurse)
         return ResponseEntity.ok(HourlyRateResponse("Successfully updated hourly rate"))
+    }
+
+    @PostMapping("/submitSignedContract")
+    fun uploadFile(
+        @RequestParam("file") file: MultipartFile,
+        @RequestHeader("Authorization") token: String
+    ): String {
+        return contractStorageService.uploadContract(file)
     }
 }
 

@@ -13,9 +13,11 @@ const HireModal = ({
                        setShowHireModal,
                        job,
                        nurseId,
+                       nurseEmail,
                    }) => {
     const [useCustomAmount, setUseCustomAmount] = useState(false);
     const [useCustomHours, setUseCustomHours] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const predefinedAmounts = Array.from({ length: 10 }, (_, i) => 45 + i * 5);
     const predefinedHours = Array.from({ length: 3 }, (_, i) => 20 + i * 4);
@@ -55,6 +57,39 @@ const HireModal = ({
             }
         }
         return false;
+    };
+
+    const handleFileChange = (event) => {
+        setSelectedFile(event.target.files[0]);
+    };
+
+    const handleContractUpload = async () => {
+        if (!selectedFile) {
+            alert('Please select a contract to upload.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+
+        try {
+            const response = await fetch('/api/uploadContract', {
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+                },
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                alert('Contract uploaded successfully!');
+            } else {
+                alert('Contract upload failed.');
+            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            alert('An error occurred during contract upload.');
+        }
     };
 
     const handleConfirmHire = async () => {
@@ -117,10 +152,24 @@ const HireModal = ({
             days: selectedDays,
             startDate: new Date(startDate).toISOString(),
             endDate: new Date(endDate).toISOString(),
-            contractFileName: "default-contract.pdf" // update this with actual upload logic
+            contractFileName: selectedFile.name // update this with actual upload logic
         }
 
         try {
+            const response = await handleContractUpload();
+
+            const hiredResponse = await fetch("/api/hireNurse", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+                },
+                body: JSON.stringify({
+                    email: nurseEmail,
+                    ...formData
+                })
+            });
+
             const res = await fetch("/api/jobOffer", {
                 method: "POST",
                 headers: {
@@ -311,6 +360,11 @@ const HireModal = ({
                         }}
                     />
                 )}
+
+                <div className="upload-contract-field">
+                    <label>Upload Contract</label>
+                    <input type="file" onChange={handleFileChange} />
+                </div>
 
                 <button className="confirm-btn" onClick={handleConfirmHire}>
                     Confirm Hire
