@@ -105,6 +105,28 @@ const NurseItem = ({ nurse, job }) => {
         }
     };
 
+    const checkIfAlreadyHired = async () => {
+        try {
+            const response = await fetch(`/api/checkIfHired?nurseId=${nurse.applicantId}&jobId=${job.id}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("jwtToken"),
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data?.hired) {
+                    setIsHired(true); // mark as hired
+                }
+            } else {
+                console.error("Failed to check hire status");
+            }
+        } catch (err) {
+            console.error("Error checking hire status:", err);
+        }
+    };
+
 
     useEffect(() => {
         // Add a small delay to stagger API calls and prevent overwhelming the server
@@ -122,7 +144,7 @@ const NurseItem = ({ nurse, job }) => {
                         setIsHired(jsonNurse.isHired);
                         return;
                     }
-                    
+
                     const token = localStorage.getItem("jwtToken");
                     const response = await fetch(`/api/getUserById/${nurse.applicantId}`, {
                         method: "GET",
@@ -152,7 +174,7 @@ const NurseItem = ({ nurse, job }) => {
 
                     // Cache the nurse details in sessionStorage
                     sessionStorage.setItem(`nurse_${nurse.applicantId}`, JSON.stringify(mappedNurse));
-                    
+
                     setNurseDetails(mappedNurse);
                     setIsHired(mappedNurse.isHired); // Always start with not hired until popup confirms
 
@@ -165,7 +187,7 @@ const NurseItem = ({ nurse, job }) => {
 
             fetchNurseDetails();
         }, Math.random() * 300); // Random delay between 0-300ms to stagger requests
-        
+
         return () => clearTimeout(timeoutId);
     }, [nurse.applicantId]);
 
@@ -212,6 +234,11 @@ const NurseItem = ({ nurse, job }) => {
                 job={job}
                 nurseId={nurse.applicantId}
                 nurseEmail={nurseDetails.email}
+                onHireSuccess={(finalData) => {
+                    console.log("Complete Data sent from HireModal =>", finalData);
+                    setIsHired(true);
+                    setShowHireModal(false);
+                }}
             />
         </div>
     );
