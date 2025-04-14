@@ -1,0 +1,48 @@
+.contracts-container {
+    padding: 2rem;
+    background-color: #f5f8fb;
+    min-height: 100vh;
+}
+
+.contracts-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.contracts-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.contract-card {
+    background-color: #ffffff;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    flex: 1 1 300px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.contract-card:hover {
+    transform: translateY(-5px);
+}
+
+.hospital-name {
+    font-size: 1.3rem;
+    color: #1e90ff;
+    margin-bottom: 0.75rem;
+}
+
+.contract-card p {
+    margin: 0.5rem 0;
+    color: #444;
+    font-size: 1rem;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 1rem 0;
+    color: #222;
+}
