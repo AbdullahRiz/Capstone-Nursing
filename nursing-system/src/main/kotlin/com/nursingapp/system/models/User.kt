@@ -28,6 +28,8 @@ data class NurseDetails(
     val experienceYears: Int = 0,
     val isHired: Boolean = false,
     val hourlyRate: Double = 0.0,
+    val accountNumber: Int? = null,
+    val routingNumber: Int? = null,
 )
 
 data class HospitalDetails(

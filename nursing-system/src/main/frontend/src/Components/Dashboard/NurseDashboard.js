@@ -41,6 +41,7 @@ const NurseDashboard = () => {
     const [selectedDays, setSelectedDays] = useState([]);
     const [useCustomHours, setUseCustomHours] = useState(false);
     const [useCustomAmount, setUseCustomAmount] = useState(false);
+    const [isPaymentSetup, setIsPaymentSetup] = useState(false);
 
     // Fetch data function
     const fetchData = useCallback(async () => {
@@ -165,6 +166,21 @@ const NurseDashboard = () => {
                     
                     setReviews(reviewsArray);
                 }
+            }
+
+            const response = await fetch(`/api/hasSetupPayment?email=${userData.email}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+
+            const json = await response.json();
+            console.log(json)
+
+            if (json.message === "true") {
+                setIsPaymentSetup(true)
             }
         } catch (err) {
             setError(err.message);
@@ -579,6 +595,20 @@ const NurseDashboard = () => {
                                 </ul>
                             ) : (
                                 <p className="no-data-message">No job applications yet.</p>
+                            )}
+                        </div>
+                    </div>
+                    <div className="nurse-applications-box">
+                        <h3>Payment Setup Status</h3>
+                        <div className="nurse-applications-list">
+                            {isPaymentSetup ? (
+                                <div>
+                                    Payment Successfully Setup!
+                                </div>
+                            ) : (
+                                <div>
+                                    You Need to Setup Payment!
+                                </div>
                             )}
                         </div>
                     </div>
