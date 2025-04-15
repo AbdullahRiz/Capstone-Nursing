@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, useLocation, Navigate } from "react-router-dom";
+import ProtectedRoute from "../Components/Auth/ProtectedRoute";
 import "./App.css";
 import Header from "../Components/Header/Header";
 import Home from "../Components/Home/Home";
@@ -18,7 +19,7 @@ import Profile from "../Components/Profile/Profile";
 import ContractsPage from "../Components/Contracts/ContractsPage"; // Create this file later
 
 
-// Dashboard redirect component
+// Dashboard redirect component 
 const DashboardRedirect = () => {
     const [loading, setLoading] = useState(true);
     const [userRole, setUserRole] = useState(null);
@@ -76,31 +77,65 @@ const DashboardRedirect = () => {
 const AppContent = () => {
     const location = useLocation();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    
-    // Check if user is logged in on component mount
-    useEffect(() => {
-        const token = localStorage.getItem("jwtToken");
-        if (token) {
-            setIsLoggedIn(true);
-        }
-    }, []);
 
     return (
         <>
             {location.pathname !== "/dummy" && <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
             <Routes>
+                {/* Public routes */}
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/signin" element={<Signin setIsLoggedIn={setIsLoggedIn} />} />
-                <Route path="/dummy" element={<Dummy isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
-                <Route path="/dashboard" element={<DashboardRedirect />} />
-                <Route path="/jobListDashboard" element={<JobListDashboard isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
-                <Route path="/nurseDashboard" element={<NurseDashboard isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
-                <Route path="/hospitalDashboard" element={<HospitalDashboard isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
-                <Route path="/create-job-application" element={<CreateJobApplication />} />
-                <Route path="/job/:id" element={<JobDetail />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/contracts" element={<ContractsPage />} />
+                
+                {/* Protected routes */}
+                <Route path="/dummy" element={
+                    <ProtectedRoute>
+                        <Dummy isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+                    </ProtectedRoute>
+                } />
+                <Route path="/dashboard" element={
+                    <ProtectedRoute>
+                        <DashboardRedirect />
+                    </ProtectedRoute>
+                } />
+                <Route path="/jobListDashboard" element={
+                    <ProtectedRoute>
+                        <JobListDashboard isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+                    </ProtectedRoute>
+                } />
+                <Route path="/nurseDashboard" element={
+                    <ProtectedRoute>
+                        <NurseDashboard isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+                    </ProtectedRoute>
+                } />
+                <Route path="/hospitalDashboard" element={
+                    <ProtectedRoute>
+                        <HospitalDashboard isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+                    </ProtectedRoute>
+                } />
+                <Route path="/create-job-application" element={
+                    <ProtectedRoute>
+                        <CreateJobApplication />
+                    </ProtectedRoute>
+                } />
+                <Route path="/job/:id" element={
+                    <ProtectedRoute>
+                        <JobDetail />
+                    </ProtectedRoute>
+                } />
+                <Route path="/profile" element={
+                    <ProtectedRoute>
+                        <Profile />
+                    </ProtectedRoute>
+                } />
+                <Route path="/contracts" element={
+                    <ProtectedRoute>
+                        <ContractsPage />
+                    </ProtectedRoute>
+                } />
+                
+                {/* Catch-all route - redirect to home */}
+                <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </>
     );

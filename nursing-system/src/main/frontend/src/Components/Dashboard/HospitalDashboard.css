@@ -1,6 +1,35 @@
 /* Import base styles from NurseDashboard.css */
 @import './NurseDashboard.css';
 
+/* Application header styles for flexbox layout */
+.application-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.application-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    min-width: 200px;
+    max-width: 600px;
+}
+
+.application-date, .pay-range {
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .application-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
 /* Hospital Dashboard specific styles */
 .hospital-dashboard-container {
     display: flex;
