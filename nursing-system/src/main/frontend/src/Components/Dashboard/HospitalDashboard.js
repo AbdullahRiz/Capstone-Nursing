@@ -217,9 +217,14 @@ const HospitalDashboard = ({ isLoggedIn, setIsLoggedIn }) => {
                                         >
                                             <div className="application-header">
                                                 <div className="application-title">{application.jobTitle}</div>
-                                                <div className="application-date">
-                                                    Created: {new Date(application.createdAt).toLocaleDateString()}
-                                                </div>
+                                                    {application.minPay > 0 && application.maxPay > 0 && (
+                                                        <div className="pay-range">
+                                                            <i className="bi bi-cash"></i> ${application.minPay} - ${application.maxPay}/hr
+                                                        </div>
+                                                    )}
+                                                    {/* <div className="application-date">
+                                                        Created: {new Date(application.createdAt).toLocaleDateString()}
+                                                    </div> */}
                                             </div>
                                             
                                             <div className="application-description">
@@ -246,12 +251,6 @@ const HospitalDashboard = ({ isLoggedIn, setIsLoggedIn }) => {
                                                         <i className="bi bi-people"></i> {application.applicants?.length || 0} applicants
                                                     </span>
                                                 </div>
-                                                
-                                                {application.minPay > 0 && application.maxPay > 0 && (
-                                                    <div className="pay-range">
-                                                        <i className="bi bi-cash"></i> ${application.minPay} - ${application.maxPay}/hr
-                                                    </div>
-                                                )}
                                             </div>
                                         </li>
                                     ))}
