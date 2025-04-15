@@ -14,6 +14,7 @@ import StyledWrapper from "../Buttons/Rating/RatingStyles";
 import Week from "../Buttons/weeks/week";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { Link } from "react-router-dom";
 
 const containerStyle = {
     width: "100%",
@@ -612,6 +613,11 @@ const NurseDashboard = () => {
                             )}
                         </div>
                     </div>
+                </div>
+                <div className="text-center mt-4 mb-3">
+                    <Link to="/contracts" className="btn btn-primary">
+                        View My Contracts
+                    </Link>
                 </div>
 
                 <div className="nurse-map">
