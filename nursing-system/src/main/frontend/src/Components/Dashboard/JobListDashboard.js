@@ -5,6 +5,9 @@ import "./JobListDashboard.css";
 import JobApplicationCard from "../Job/JobApplicationCard";
 import Footer from "../Footer/Footer";
 
+
+import { useNavigate } from "react-router-dom";
+
 const JobListDashboard = () => {
     const [user, setUser] = useState(null);
     const [jobApplications, setJobApplications] = useState([]);

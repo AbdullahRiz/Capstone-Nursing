@@ -15,6 +15,7 @@ import NurseDashboard from "../Components/Dashboard/NurseDashboard";
 import HospitalDashboard from "../Components/Dashboard/HospitalDashboard";
 import CreateJobApplication from "../Components/Job/CreateJobApplication";
 import Profile from "../Components/Profile/Profile";
+import ContractsPage from "../Components/Contracts/ContractsPage"; // Create this file later
 
 
 // Dashboard redirect component
@@ -99,6 +100,7 @@ const AppContent = () => {
                 <Route path="/create-job-application" element={<CreateJobApplication />} />
                 <Route path="/job/:id" element={<JobDetail />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/contracts" element={<ContractsPage />} />
             </Routes>
         </>
     );

@@ -56,6 +56,16 @@ class NurseOperations (
     ): String {
         return contractStorageService.uploadContract(file)
     }
+
+    @GetMapping("/hasSetupPayment")
+    fun hasSetupPayment(
+        @RequestParam("email") email: String,
+        @RequestHeader("Authorization") token: String
+    ): ResponseEntity<PaymentSetupResponse> {
+        val nurse = userService.findByEmail(email) ?: return ResponseEntity.status(401).body(PaymentSetupResponse("Could not find nurse"))
+
+        return ResponseEntity.ok(PaymentSetupResponse((nurse.nurseDetails?.routingNumber != null && nurse.nurseDetails.accountNumber != null).toString()))
+    }
 }
 
 fun hasTwoDecimalPlaces(number: Double): Boolean {
@@ -70,5 +80,9 @@ data class HourlyRateRequest(
 )
 
 data class HourlyRateResponse(
+    val message: String
+)
+
+data class PaymentSetupResponse(
     val message: String
 )

@@ -14,6 +14,7 @@ import StyledWrapper from "../Buttons/Rating/RatingStyles";
 import Week from "../Buttons/weeks/week";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { Link } from "react-router-dom";
 
 const containerStyle = {
     width: "100%",
@@ -44,10 +45,7 @@ const NurseDashboard = () => {
     const [downloadedOffers, setDownloadedOffers] = useState({});
     const [selectedFile, setSelectedFile] = useState(null);
     const [selectedOfferId, setSelectedOfferId] = useState(null);
-
-
-
-
+    const [isPaymentSetup, setIsPaymentSetup] = useState(false);
 
     // Fetch data function
     const fetchData = useCallback(async () => {
@@ -175,6 +173,21 @@ const NurseDashboard = () => {
 
                     setReviews(reviewsArray);
                 }
+            }
+
+            const response = await fetch(`/api/hasSetupPayment?email=${userData.email}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+
+            const json = await response.json();
+            console.log(json)
+
+            if (json.message === "true") {
+                setIsPaymentSetup(true)
             }
         } catch (err) {
             setError(err.message);
@@ -738,6 +751,25 @@ const NurseDashboard = () => {
                             )}
                         </div>
                     </div>
+                    <div className="nurse-applications-box">
+                        <h3>Payment Setup Status</h3>
+                        <div className="nurse-applications-list">
+                            {isPaymentSetup ? (
+                                <div>
+                                    Payment Successfully Setup!
+                                </div>
+                            ) : (
+                                <div>
+                                    You Need to Setup Payment!
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+                <div className="text-center mt-4 mb-3">
+                    <Link to="/contracts" className="btn btn-primary">
+                        View My Contracts
+                    </Link>
                 </div>
 
                 <div className="nurse-map">
