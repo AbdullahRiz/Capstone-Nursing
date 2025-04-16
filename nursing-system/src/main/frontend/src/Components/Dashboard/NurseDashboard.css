@@ -385,9 +385,8 @@
 .nurse-map {
     justify-items: center;
     border-radius: 12px;
-    width: 90vw;
+    width: 95vw;
     padding: 17px 16px;
-
     background-color: #ffffff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     margin-bottom: 30px;
@@ -485,4 +484,42 @@
     font-size: 16px;
     font-weight: bold;
     color: #333;
+}
+
+/* Style for download contract link */
+.download-btn {
+    display: inline-block;
+    margin-right: 15px;
+    padding: 8px 16px;
+    background-color: #4a90e2;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+    background-color: #357bd8;
+}
+
+/* Style for file input */
+.file-upload-label {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 15px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.file-upload-label:hover {
+    background-color: #218838;
+}
+
+.file-upload-input {
+    display: none;
 }

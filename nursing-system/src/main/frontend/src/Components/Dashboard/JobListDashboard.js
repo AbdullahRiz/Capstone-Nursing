@@ -4,11 +4,11 @@ import FilterForm from "../Filter/JobFilterForm";
 import "./JobListDashboard.css";
 import JobApplicationCard from "../Job/JobApplicationCard";
 import Footer from "../Footer/Footer";
-
-
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 const JobListDashboard = () => {
+    const navigate = useNavigate()
+
     const [user, setUser] = useState(null);
     const [jobApplications, setJobApplications] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -52,7 +52,9 @@ const JobListDashboard = () => {
                 ]);
                 
                 if (!userResponse.ok) {
-                    throw new Error("Failed to fetch user details");
+                    localStorage.removeItem("jwtToken");
+                    navigate("/signin");
+                    return;
                 }
                 
                 if (!jobsResponse.ok) {
@@ -183,7 +185,8 @@ const JobListDashboard = () => {
                                         updatedAt={updatedAt}
                                         targetDate={targetDate}
                                         title={application.jobTitle}
-                                        isHired={isHired} // Pass it to your card if needed
+                                        isHired={isHired}
+                                        userRole={user.role}
                                     />
                                 );
                             })

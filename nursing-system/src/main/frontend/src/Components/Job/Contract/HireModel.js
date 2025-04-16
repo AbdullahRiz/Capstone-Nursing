@@ -32,6 +32,7 @@ const HireModal = ({
         { id: "saturday", label: "S", name: "Sat" },
     ];
 
+
     useEffect(() => {
         const handleEsc = (e) => {
             if (e.key === "Escape") onClose();
@@ -93,7 +94,7 @@ const HireModal = ({
     };
 
     const handleConfirmHire = async () => {
-        const {amount, startDate, endDate, hoursPerDay, selectedDays} = formData;
+        const { amount, startDate, endDate, hoursPerDay, selectedDays } = formData;
         const selectedLength = selectedDays.length;
         const isThreeConsecutive = areThreeDaysConsecutive(selectedDays);
 
@@ -109,23 +110,24 @@ const HireModal = ({
             return;
         }
 
+        if (!selectedFile) {
+            alert("Please upload the contract file before submitting.");
+            return;
+        }
+
         if (selectedLength > 6) {
             alert("You cannot select more than 6 working days in a week.");
             return;
         }
 
         if (hoursPerDay <= 10 && amount < 45) {
-            alert(
-                "Minimum pay must be $45 if hours per day are less than or equal to 10."
-            );
+            alert("Minimum pay must be $45 if hours per day are less than or equal to 10.");
             return;
         }
 
         if (isThreeConsecutive) {
             if (hoursPerDay < 15 || hoursPerDay > 20) {
-                alert(
-                    "For 3 consecutive days, working hours must be between 15 and 20."
-                );
+                alert("For 3 consecutive days, working hours must be between 15 and 20.");
                 return;
             }
             if (amount < 50) {
@@ -136,47 +138,54 @@ const HireModal = ({
 
         if (!isThreeConsecutive && selectedLength >= 4 && selectedLength <= 5) {
             if (amount < 65) {
-                alert(
-                    "Minimum pay must be $65 for 4-5 non-consecutive working days."
-                );
+                alert("Minimum pay must be $65 for 4-5 non-consecutive working days.");
                 return;
             }
         }
 
-        const payload = {
-            jobTitle: job.jobTitle,
-            nurseId: nurseId,
-            jobApplicationId: job.id,
-            pay: amount,
-            hours: parseInt(hoursPerDay),
-            days: selectedDays,
-            startDate: new Date(startDate).toISOString(),
-            endDate: new Date(endDate).toISOString(),
-            contractFileName: selectedFile.name // update this with actual upload logic
-        }
-
         try {
-            const response = await handleContractUpload();
+            await handleContractUpload();
+
+            const payload = {
+                jobTitle: job.jobTitle,
+                nurseId: nurseId,
+                jobApplicationId: job.id,
+                pay: amount,
+                hours: parseInt(hoursPerDay),
+                days: selectedDays,
+                startDate: new Date(startDate).toISOString(),
+                endDate: new Date(endDate).toISOString(),
+                contractFileName: selectedFile.name,
+            };
+
+            // Log the complete payload going to jobOffer API
+            console.log("Payload sent to /api/jobOffer =>", payload);
+
+            // Log the data sent to /api/hireNurse
+            console.log("Payload sent to /api/hireNurse =>", {
+                email: nurseEmail,
+                ...formData,
+            });
 
             const hiredResponse = await fetch("/api/hireNurse", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+                    "Authorization": "Bearer " + localStorage.getItem("jwtToken"),
                 },
                 body: JSON.stringify({
                     email: nurseEmail,
-                    ...formData
-                })
+                    ...formData,
+                }),
             });
 
             const res = await fetch("/api/jobOffer", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+                    "Authorization": "Bearer " + localStorage.getItem("jwtToken"),
                 },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payload),
             });
 
             if (!res.ok) {
@@ -191,7 +200,7 @@ const HireModal = ({
                 alert("Hired successfully! (Simulated)");
             }, 500);
         } catch (err) {
-            console.error("API error: ", err)
+            console.error("API error: ", err);
         }
     };
 
@@ -295,7 +304,7 @@ const HireModal = ({
                             showMonthDropdown
                             showYearDropdown
                             dropdownMode="select"
-                        />
+                         showMonthYearDropdown/>
                     </div>
 
                     <div className="date-field">
@@ -319,7 +328,7 @@ const HireModal = ({
                             showMonthDropdown
                             showYearDropdown
                             dropdownMode="select"
-                        />
+                         showMonthYearDropdown/>
                     </div>
                 </div>
 

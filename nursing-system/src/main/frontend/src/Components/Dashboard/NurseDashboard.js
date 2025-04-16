@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 
 const containerStyle = {
     width: "100%",
-    height: "400px",
+    height: "700px",
 };
 
 const defaultCenter = {
@@ -42,6 +42,9 @@ const NurseDashboard = () => {
     const [selectedDays, setSelectedDays] = useState([]);
     const [useCustomHours, setUseCustomHours] = useState(false);
     const [useCustomAmount, setUseCustomAmount] = useState(false);
+    const [downloadedOffers, setDownloadedOffers] = useState({});
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [selectedOfferId, setSelectedOfferId] = useState(null);
     const [isPaymentSetup, setIsPaymentSetup] = useState(false);
 
     // Fetch data function
@@ -49,11 +52,11 @@ const NurseDashboard = () => {
         try {
             setLoading(true);
             const token = localStorage.getItem("jwtToken");
-            
+
             if (!token) {
                 throw new Error("No authentication token found");
             }
-            
+
             // Fetch user details
             const userResponse = await fetch("/api/getUserDetails", {
                 method: "GET",
@@ -63,9 +66,13 @@ const NurseDashboard = () => {
                 },
             });
 
-            if (!userResponse.ok) throw new Error("Failed to fetch user details");
+            if (!userResponse.ok) {
+                localStorage.removeItem("jwtToken");
+                navigate("/signin");
+                return;
+            }
             const userData = await userResponse.json();
-            
+
             // Check if user is a nurse
             if (userData.role !== "NURSE") {
                 // Redirect to appropriate dashboard based on role
@@ -77,9 +84,10 @@ const NurseDashboard = () => {
                     return;
                 }
             }
-            
+
+
             setUser(userData);
-            
+
             // Fetch applied jobs
             try {
                 const appliedJobsResponse = await fetch("/api/listAppliedJobs", {
@@ -89,7 +97,7 @@ const NurseDashboard = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                
+
                 if (!appliedJobsResponse.ok) {
                     console.error("Failed to fetch applied jobs:", appliedJobsResponse.status);
                 } else {
@@ -99,7 +107,7 @@ const NurseDashboard = () => {
             } catch (err) {
                 console.error("Error fetching applied jobs:", err);
             }
-            
+
             // Fetch job offers for the nurse
             if (userData.id) {
                 try {
@@ -110,7 +118,7 @@ const NurseDashboard = () => {
                             Authorization: `Bearer ${token}`,
                         },
                     });
-                    
+
                     if (!offersResponse.ok) {
                         console.error("Failed to fetch job offers:", offersResponse.status);
                     } else {
@@ -120,11 +128,13 @@ const NurseDashboard = () => {
                 } catch (err) {
                     console.error("Error fetching job offers:", err);
                 }
-                
+
+
+
                 // Handle reviews from user data
                 if (userData.ratingHistory) {
                     let reviewsArray = [];
-                    
+
                     // Check if ratingHistory is an object with nested rating objects
                     if (typeof userData.ratingHistory === 'object' && !Array.isArray(userData.ratingHistory)) {
                         // Transform the rating history object into an array of review objects
@@ -150,7 +160,7 @@ const NurseDashboard = () => {
                             }
                         });
                         console.log("Transformed reviews:", reviewsArray);
-                    } 
+                    }
                     // Check if ratingHistory is an array (future format)
                     else if (Array.isArray(userData.ratingHistory)) {
                         // The ratingHistory is an array of RatingItem objects
@@ -164,7 +174,7 @@ const NurseDashboard = () => {
                         });
                         console.log("Reviews from API (array format):", reviewsArray);
                     }
-                    
+
                     setReviews(reviewsArray);
                 }
             }
@@ -190,7 +200,10 @@ const NurseDashboard = () => {
             setLoading(false);
         }
     }, []);
-    
+
+
+
+
     // Fetch all data on component mount
     useEffect(() => {
         fetchData();
@@ -254,16 +267,22 @@ const NurseDashboard = () => {
             }
         }
     };
-    
+
     // Handle job offer accept/decline
-    const handleOfferAction = async (offerId, status) => {
+    const handleOfferAction = async (offerId, status, contractFileName) => {
         try {
             const token = localStorage.getItem("jwtToken");
-            
-            if (!token) {
-                throw new Error("No authentication token found");
+
+            if (!token) throw new Error("No authentication token found");
+
+            if (status === "ACCEPTED") {
+                // download hospital contract
+                window.open(`/api/contracts/${contractFileName}`, "_blank");
+
+                setSelectedOfferId(offerId); // Save for upload tracking
+                alert("Please sign and upload the contract.");
             }
-            
+
             const response = await fetch(`/api/jobOffer/${offerId}`, {
                 method: "PUT",
                 headers: {
@@ -272,24 +291,112 @@ const NurseDashboard = () => {
                 },
                 body: JSON.stringify({ status }),
             });
-            
-            if (!response.ok) {
-                throw new Error(`Failed to update offer status: ${response.status}`);
-            }
-            
-            // Update the local state to reflect the change
-            setJobOffers(prevOffers => 
-                prevOffers.map(offer => 
+
+            if (!response.ok) throw new Error(`Failed to update offer status: ${response.status}`);
+
+            setJobOffers((prev) =>
+                prev.map((offer) =>
                     offer.id === offerId ? { ...offer, status } : offer
                 )
             );
-            
-            // Show success message
+
             alert(`Offer ${status.toLowerCase()} successfully!`);
-            
         } catch (error) {
             console.error("Error updating offer status:", error);
             alert(`Failed to ${status.toLowerCase()} offer: ${error.message}`);
+        }
+    };
+
+    // Upload Signed Contract
+    const handleFileChange = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        setSelectedFile(file);
+        const token = localStorage.getItem("jwtToken");
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const uploadResponse = await fetch("/api/uploadContract", {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+        });
+
+        if (!uploadResponse.ok) {
+            alert("Contract Upload Failed");
+            return;
+        }
+
+        const uploadedFileName = await uploadResponse.text();
+
+        const updateResponse = await fetch(`/api/updateJobOfferContract/${selectedOfferId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ contractFileName: uploadedFileName }),
+        });
+
+        if (!updateResponse.ok) {
+            alert("Failed to update Job Offer with Contract");
+            return;
+        }
+
+        alert("Contract uploaded successfully!");
+    };
+
+
+    const handleDownloadPDF = async (contractFileName, offerId) => {
+        if (!contractFileName || contractFileName === "default-contract.pdf") {
+            alert("Contract not available yet. Please contact hospital.");
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem("jwtToken");
+
+            const response = await fetch(`/api/contracts/${contractFileName}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    alert("Contract not found. Please ask the hospital to upload it.");
+                } else {
+                    alert(`Failed to download contract. Error code: ${response.status}`);
+                }
+                return;
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", contractFileName);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            window.URL.revokeObjectURL(url);
+
+            // Mark this offer as downloaded
+            setDownloadedOffers((prev) => ({
+                ...prev,
+                [offerId]: true,
+            }));
+
+        } catch (error) {
+            console.error("Error downloading PDF:", error);
+            alert("Something went wrong while downloading. Please contact support.");
         }
     };
 
@@ -439,28 +546,29 @@ const NurseDashboard = () => {
                                                 <div className="offer-header">
                                                     <div className="offer-title">{offer.jobTitle}</div>
                                                     <div className="offer-status">
-                                                        Status: <span className={`status-${offer.status.toLowerCase()}`}>
+                                                        Status: <span
+                                                        className={`status-${offer.status.toLowerCase()}`}>
                                                             {offer.status}
                                                         </span>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div className="offer-details">
                                                     <div className="offer-detail">
                                                         <span className="detail-label">Pay Rate:</span>
                                                         <span className="offer-pay">${offer.rate}/hr</span>
                                                     </div>
-                                                    
+
                                                     <div className="offer-detail">
                                                         <span className="detail-label">Total Compensation:</span>
                                                         <span className="offer-total">${offer.totalComp}</span>
                                                     </div>
-                                                    
+
                                                     <div className="offer-detail">
                                                         <span className="detail-label">Hours:</span>
                                                         <span>{offer.hours} hrs/day</span>
                                                     </div>
-                                                    
+
                                                     <div className="offer-detail">
                                                         <span className="detail-label">Work Days:</span>
                                                         <div className="days-available">
@@ -472,36 +580,84 @@ const NurseDashboard = () => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 {offer.message && (
                                                     <div className="offer-message">
                                                         <span className="detail-label">Message:</span>
                                                         <p>{offer.message}</p>
                                                     </div>
                                                 )}
-                                                
-                                                {offer.status === "SENT" && (
-                                                    <div className="offer-actions">
-                                                        <button 
-                                                            className="accept-btn"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleOfferAction(offer.id, "ACCEPTED");
-                                                            }}
-                                                        >
-                                                            Accept Offer
-                                                        </button>
-                                                        <button 
-                                                            className="decline-btn"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleOfferAction(offer.id, "DECLINED");
-                                                            }}
-                                                        >
-                                                            Decline Offer
-                                                        </button>
-                                                    </div>
-                                                )}
+
+                                                <div className="offer-actions">
+                                                    {offer.status === "ACCEPTED" && (
+                                                        <>
+                                                            {offer.contractFileName ? (
+                                                                <a
+                                                                    className="download-btn"
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        handleDownloadPDF(offer.contractFileName, offer.id);
+                                                                    }}
+                                                                >
+                                                                    Download Contract
+                                                                </a>
+
+                                                            ) : (
+                                                                <button className="download-btn" disabled>
+                                                                    Contract Not Available
+                                                                </button>
+                                                            )}
+
+                                                            {downloadedOffers[offer.id] && (
+                                                                <label className="file-upload-label">
+                                                                    Re-upload
+                                                                    <input
+                                                                        type="file"
+                                                                        accept=".pdf,.doc,.docx"
+                                                                        className="file-upload-input"
+                                                                        onChange={handleFileChange}
+                                                                    />
+                                                                </label>
+                                                            )}
+                                                        </>
+                                                    )}
+
+                                                    {offer.status === "SENT" && (
+                                                        <>
+                                                            <button
+                                                                className="accept-btn"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleOfferAction(offer.id, "ACCEPTED", offer.contractFileName);
+                                                                }}
+                                                            >
+                                                                Accept Offer
+                                                            </button>
+
+                                                            <button
+                                                                className="decline-btn"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleOfferAction(offer.id, "DECLINED", offer.contractFileName);
+                                                                }}
+                                                            >
+                                                                Decline Offer
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                </div>
+
+                                                {/*/!* Upload Contract Section *!/*/}
+                                                {/*{selectedOfferId === offer.id && (*/}
+                                                {/*    <div className="upload-contract">*/}
+                                                {/*        <input*/}
+                                                {/*            type="file"*/}
+                                                {/*            accept=".pdf,.docx,.doc"*/}
+                                                {/*            onChange={handleFileChange}*/}
+                                                {/*        />*/}
+                                                {/*    </div>*/}
+                                                {/*)}*/}
+
                                             </li>
                                         ))}
                                         {jobOffers.length > 5 && (
@@ -522,8 +678,8 @@ const NurseDashboard = () => {
                             {appliedJobs.length > 0 ? (
                                 <ul className="application-list">
                                     {appliedJobs.map((job) => (
-                                        <li 
-                                            key={job.id} 
+                                        <li
+                                            key={job.id}
                                             className="application-item"
                                             onClick={() => navigate(`/job/${job.id}`)}
                                         >
@@ -533,13 +689,13 @@ const NurseDashboard = () => {
                                                     Applied: {new Date(job.createdAt).toLocaleDateString()}
                                                 </div>
                                             </div>
-                                            
+
                                             <div className="application-description">
-                                                {job.description && job.description.length > 150 
-                                                    ? `${job.description.substring(0, 150)}...` 
+                                                {job.description && job.description.length > 150
+                                                    ? `${job.description.substring(0, 150)}...`
                                                     : job.description}
                                             </div>
-                                            
+
                                             <div className="application-details">
                                                 <div className="application-detail">
                                                     <span className="detail-label">Required Skills:</span>
@@ -551,45 +707,39 @@ const NurseDashboard = () => {
                                                         ))}
                                                     </div>
                                                 </div>
-                                                
-                                                {job.applicants && job.applicants.length > 0 && 
-                                                 job.applicants.find(app => app.applicantId === user?.id) && (
-                                                    <>
-                                                        <div className="application-detail">
-                                                            <span className="detail-label">Your Availability:</span>
-                                                            <div className="availability-info">
-                                                                <div className="days-available">
-                                                                    {job.applicants.find(app => app.applicantId === user?.id).availableDays?.map((day, index) => (
-                                                                        <span key={index} className="day-tag">
+
+                                                {job.applicants && job.applicants.length > 0 &&
+                                                    job.applicants.find(app => app.applicantId === user?.id) && (
+                                                        <>
+                                                            <div className="application-detail">
+                                                                <span className="detail-label">Your Availability:</span>
+                                                                <div className="availability-info">
+                                                                    <div className="days-available">
+                                                                        {job.applicants.find(app => app.applicantId === user?.id).availableDays?.map((day, index) => (
+                                                                            <span key={index} className="day-tag">
                                                                             {day.substring(0, 3)}
                                                                         </span>
-                                                                    ))}
-                                                                </div>
-                                                                <div className="hours-available">
-                                                                    <i className="bi bi-clock"></i> 
-                                                                    {job.applicants.find(app => app.applicantId === user?.id).availableHours} hrs/week
+                                                                        ))}
+                                                                    </div>
+                                                                    <div className="hours-available">
+                                                                        <i className="bi bi-clock"></i>
+                                                                        {job.applicants.find(app => app.applicantId === user?.id).availableHours} hrs/week
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        
-                                                        <div className="application-detail">
-                                                            <span className="detail-label">Your Skills:</span>
-                                                            <div className="skill-tags">
-                                                                {job.applicants.find(app => app.applicantId === user?.id).skills?.map((skill, index) => (
-                                                                    <span key={index} className="skill-tag your-skill">
+
+                                                            <div className="application-detail">
+                                                                <span className="detail-label">Your Skills:</span>
+                                                                <div className="skill-tags">
+                                                                    {job.applicants.find(app => app.applicantId === user?.id).skills?.map((skill, index) => (
+                                                                        <span key={index} className="skill-tag your-skill">
                                                                         {skill.replace(/_/g, ' ')}
                                                                     </span>
-                                                                ))}
+                                                                    ))}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </>
-                                                )}
-                                                
-                                                {job.minPay > 0 && job.maxPay > 0 && (
-                                                    <div className="pay-range">
-                                                        <i className="bi bi-cash"></i> ${job.minPay} - ${job.maxPay}/hr
-                                                    </div>
-                                                )}
+                                                        </>
+                                                    )}
                                             </div>
                                         </li>
                                     ))}
