@@ -66,7 +66,11 @@ const NurseDashboard = () => {
                 },
             });
 
-            if (!userResponse.ok) throw new Error("Failed to fetch user details");
+            if (!userResponse.ok) {
+                localStorage.removeItem("jwtToken");
+                navigate("/signin");
+                return;
+            }
             const userData = await userResponse.json();
 
             // Check if user is a nurse

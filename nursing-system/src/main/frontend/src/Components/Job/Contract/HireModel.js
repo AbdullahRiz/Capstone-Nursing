@@ -304,7 +304,7 @@ const HireModal = ({
                             showMonthDropdown
                             showYearDropdown
                             dropdownMode="select"
-                        />
+                         showMonthYearDropdown/>
                     </div>
 
                     <div className="date-field">
@@ -328,7 +328,7 @@ const HireModal = ({
                             showMonthDropdown
                             showYearDropdown
                             dropdownMode="select"
-                        />
+                         showMonthYearDropdown/>
                     </div>
                 </div>
 

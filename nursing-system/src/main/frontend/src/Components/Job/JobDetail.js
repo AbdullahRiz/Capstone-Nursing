@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import FilterForm from "../Filter/NurseFilterForm";
 import NurseItem from "../Nurse/NurseItem";
 import "./JobDetail.css";
@@ -17,7 +18,10 @@ const JobDetail = () => {
     const [showApplyModal, setShowApplyModal] = useState(false); // State to control the apply modal
     const [hasApplied, setHasApplied] = useState(false); // State to check if the nurse has already applied
     const [currentUserId, setCurrentUserId] = useState(null); // State to store the current user's ID
-    
+
+    const navigate = useNavigate();
+
+
     // State for application form
     const [applicationData, setApplicationData] = useState({
         availableDays: [],
@@ -64,7 +68,9 @@ const JobDetail = () => {
                 }
                 
                 if (!userResponse.ok) {
-                    throw new Error("Failed to fetch user details");
+                    localStorage.removeItem("jwtToken");
+                    navigate("/signin");
+                    return;
                 }
                 
                 // Parse responses

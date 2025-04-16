@@ -5,6 +5,7 @@
     background-color: #f9f9f9;
     font-family: "Inter", sans-serif;
     padding: 20px;
+    overflow-x: hidden;
 }
 
 /* Main Content Styling */
