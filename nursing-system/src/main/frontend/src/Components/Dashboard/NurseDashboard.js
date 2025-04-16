@@ -740,12 +740,6 @@ const NurseDashboard = () => {
                                                             </div>
                                                         </>
                                                     )}
-
-                                                {job.minPay > 0 && job.maxPay > 0 && (
-                                                    <div className="pay-range">
-                                                        <i className="bi bi-cash"></i> ${job.minPay} - ${job.maxPay}/hr
-                                                    </div>
-                                                )}
                                             </div>
                                         </li>
                                     ))}
