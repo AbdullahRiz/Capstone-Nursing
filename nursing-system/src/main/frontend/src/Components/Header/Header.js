@@ -31,41 +31,62 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
     };
 
     const handleLogout = async() => {
-
         try {
             const token = localStorage.getItem("jwtToken");
-            console.log(token)
-
-            const response = await fetch("http://localhost:8080/api/logout", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                }
-            })
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`)
+            
+            if (!token) {
+                // If no token exists, just clean up and redirect
+                setIsLoggedIn(false);
+                setLogoutMessage("You have been logged out.");
+                navigate("/");
+                return;
             }
-
-            // Clear authentication tokens or session data
+            
+            try {
+                // Try to call the logout API
+                const response = await fetch("http://localhost:8080/api/logout", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+                
+                // Even if the API call fails, we still want to log out the user locally
+                if (!response.ok) {
+                    console.warn(`Logout API returned status: ${response.status}`);
+                    // Check if it's a JWT error
+                    try {
+                        const errorData = await response.json();
+                        if (errorData.message && errorData.message.includes('JWT')) {
+                            console.log('JWT error detected during logout');
+                        }
+                    } catch (e) {
+                        // If we can't parse the response as JSON, just continue with logout
+                    }
+                }
+            } catch (apiError) {
+                // If the API call throws an error, log it but continue with local logout
+                console.error("Error calling logout API: ", apiError);
+            }
+            
+            // Always clear the token and update state, regardless of API success
             localStorage.removeItem("jwtToken");
-
-            // Update the isLoggedIn state
             setIsLoggedIn(false);
-
-            // Set logout message
             setLogoutMessage("You have successfully logged out.");
-
-            // Redirect to the Home page
             navigate("/");
-
+            
         } catch (error) {
-            console.error("Error during logout: ", error);
-            setLogoutMessage("Logout failed.");
+            console.error("Error during logout process: ", error);
+            
+            // Even if there's an error, make sure the user is logged out locally
+            localStorage.removeItem("jwtToken");
+            setIsLoggedIn(false);
+            setLogoutMessage("Logged out with errors.");
+            navigate("/");
         }
 
-        // Remove logout message after 3 seconds
+        // Remove logout message after a short delay
         setTimeout(() => {
             setLogoutMessage("");
         }, 800);

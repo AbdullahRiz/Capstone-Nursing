@@ -66,7 +66,11 @@ const NurseDashboard = () => {
                 },
             });
 
-            if (!userResponse.ok) throw new Error("Failed to fetch user details");
+            if (!userResponse.ok) {
+                localStorage.removeItem("jwtToken");
+                navigate("/signin");
+                return;
+            }
             const userData = await userResponse.json();
 
             // Check if user is a nurse
@@ -736,12 +740,6 @@ const NurseDashboard = () => {
                                                             </div>
                                                         </>
                                                     )}
-
-                                                {job.minPay > 0 && job.maxPay > 0 && (
-                                                    <div className="pay-range">
-                                                        <i className="bi bi-cash"></i> ${job.minPay} - ${job.maxPay}/hr
-                                                    </div>
-                                                )}
                                             </div>
                                         </li>
                                     ))}

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import "../Signup/signup.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Dummy from "../Home/Dummy";
 import JobListDashboard from "../Dashboard/JobListDashboard";
 
 const SignIn = ({ setIsLoggedIn }) => {
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/jobListDashboard";
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -69,7 +71,8 @@ const SignIn = ({ setIsLoggedIn }) => {
       setIsLoggedIn(true);
       
       alert("Sign In Successful!");
-      navigate("/JobListDashboard");
+      // Navigate to the page the user was trying to access, or to the job list dashboard by default
+      navigate(from);
     } catch (error) {
       console.error("Error during fetch:", error);
       alert(`Sign In failed: ${error.message}`);
