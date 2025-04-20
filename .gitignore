@@ -49,3 +49,5 @@ hs_err_pid*
 .env.development
 .env.production
 .env.test
+
+/contracts

@@ -96,7 +96,7 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
         <header className="header">
             <nav className="navbar navbar-expand-lg">
                 <Link className="navbar-brand" to="/">
-                    🏥 Nursing Group
+                    🏥 Health Bridge
                 </Link>
                 <Navigation />
                 <ul className="navbar-nav ml-auto">

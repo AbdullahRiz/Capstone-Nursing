@@ -84,4 +84,23 @@ class JobApplicationService (private val jobApplicationRepository: JobApplicatio
         }
     }
     fun getJobApplicationsByIds(ids: List<String>): List<JobApplication> = jobApplicationRepository.findAllById(ids)
+    
+    fun updateApplicantHiredStatus(jobApplicationId: String, applicantId: String, isHired: Boolean): JobApplication? {
+        val jobApplication = getById(jobApplicationId) ?: return null
+        
+        val updatedApplicants = jobApplication.applicants.map { applicant ->
+            if (applicant.applicantId == applicantId) {
+                applicant.copy(isHired = isHired)
+            } else {
+                applicant
+            }
+        }
+        
+        val updatedJobApplication = jobApplication.copy(
+            applicants = updatedApplicants,
+            updatedAt = Instant.now()
+        )
+        
+        return jobApplicationRepository.save(updatedJobApplication)
+    }
 }
