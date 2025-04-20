@@ -72,6 +72,7 @@ data class Applicant(
     val availableDays: List<DaysOfTheWeek> = emptyList(),
     val availableHours: Double? = null,
     val skills: List<SkillSet> = emptyList(),
+    var isHired: Boolean = false,
 )
 
 enum class DaysOfTheWeek {

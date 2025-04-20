@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./NurseItem.css";
 import defaultProfilePicture from "../../Assets/default-user-photo.png";
 import Rating from "../Buttons/Rating/Rating";
-import HireModal from "../Job/Contract/HireModel";
+import HireModal from "../Job/Contract/HireModal";
 
 const NurseItem = ({ nurse, job }) => {
     const [nurseDetails, setNurseDetails] = useState(null);
@@ -132,6 +132,9 @@ const NurseItem = ({ nurse, job }) => {
         // Add a small delay to stagger API calls and prevent overwhelming the server
         const timeoutId = setTimeout(() => {
             const fetchNurseDetails = async () => {
+                // First check if the nurse is already hired for this job
+                await checkIfAlreadyHired();
+                
                 try {
                     // Check if we already have this nurse's details in sessionStorage
                     const cachedNurse = sessionStorage.getItem(`nurse_${nurse.applicantId}`);
@@ -141,7 +144,9 @@ const NurseItem = ({ nurse, job }) => {
                         const jsonNurse = JSON.parse(cachedNurse)
                         setNurseDetails(jsonNurse);
                         setLoading(false);
-                        setIsHired(jsonNurse.isHired);
+                        // Check if the nurse is hired for this specific job
+                        const isHiredForThisJob = jsonNurse.hiredJobsIds && jsonNurse.hiredJobsIds.includes(job.id);
+                        setIsHired(isHiredForThisJob);
                         return;
                     }
 
@@ -169,14 +174,16 @@ const NurseItem = ({ nurse, job }) => {
                         experience: user.nurseDetails?.experienceYears?.toString() + " years" || "No experience",
                         hoursAvailable: nurse.availableHours?.toString() || "No availability",
                         profilePicture: user.profilePicture || defaultProfilePicture,
-                        isHired: user.nurseDetails?.isHired,
+                        hiredJobsIds: user.nurseDetails?.hiredJobsIds || [],
                     };
 
                     // Cache the nurse details in sessionStorage
                     sessionStorage.setItem(`nurse_${nurse.applicantId}`, JSON.stringify(mappedNurse));
 
                     setNurseDetails(mappedNurse);
-                    setIsHired(mappedNurse.isHired); // Always start with not hired until popup confirms
+                    // Check if the nurse is hired for this specific job
+                    const isHiredForThisJob = mappedNurse.hiredJobsIds.includes(job.id);
+                    setIsHired(isHiredForThisJob);
 
                 } catch (err) {
                     setError(err.message);
@@ -189,7 +196,7 @@ const NurseItem = ({ nurse, job }) => {
         }, Math.random() * 300); // Random delay between 0-300ms to stagger requests
 
         return () => clearTimeout(timeoutId);
-    }, [nurse.applicantId]);
+    }, [nurse.applicantId, job.id]);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;

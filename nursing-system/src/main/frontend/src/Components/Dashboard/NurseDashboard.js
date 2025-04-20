@@ -123,7 +123,20 @@ const NurseDashboard = () => {
                         console.error("Failed to fetch job offers:", offersResponse.status);
                     } else {
                         const offersData = await offersResponse.json();
-                        setJobOffers(offersData);
+                        // Sort offers by ID in descending order (assuming newer offers have higher IDs)
+                        // If there's a createdAt field, we could use that instead
+                        const sortedOffers = [...offersData].sort((a, b) => {
+                            // If there's an ID field, sort by that (newer IDs are typically higher)
+                            if (a.id && b.id) {
+                                return b.id.localeCompare(a.id);
+                            }
+                            // Fallback to sorting by start date if available
+                            if (a.startDate && b.startDate) {
+                                return new Date(b.startDate) - new Date(a.startDate);
+                            }
+                            return 0; // No sorting criteria available
+                        });
+                        setJobOffers(sortedOffers);
                     }
                 } catch (err) {
                     console.error("Error fetching job offers:", err);
@@ -276,13 +289,41 @@ const NurseDashboard = () => {
             if (!token) throw new Error("No authentication token found");
 
             if (status === "ACCEPTED") {
-                // download hospital contract
-                window.open(`/api/contracts/${contractFileName}`, "_blank");
-
-                setSelectedOfferId(offerId); // Save for upload tracking
-                alert("Please sign and upload the contract.");
+                // Download hospital contract with proper authorization
+                try {
+                    const response = await fetch(`/api/contracts/${contractFileName}`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Failed to download contract: ${response.status}`);
+                    }
+                    
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.setAttribute("download", contractFileName);
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    
+                    window.URL.revokeObjectURL(url);
+                    
+                    setSelectedOfferId(offerId); // Save for upload tracking
+                    alert("Please sign and upload the contract.");
+                } catch (error) {
+                    console.error("Error downloading contract:", error);
+                    alert(`Failed to download contract: ${error.message}`);
+                    return; // Don't proceed if contract download fails
+                }
             }
 
+            // Update the job offer status
             const response = await fetch(`/api/jobOffer/${offerId}`, {
                 method: "PUT",
                 headers: {
@@ -294,13 +335,41 @@ const NurseDashboard = () => {
 
             if (!response.ok) throw new Error(`Failed to update offer status: ${response.status}`);
 
+            // If the offer is declined, also unapply from the job
+            if (status === "DECLINED") {
+                try {
+                    // Find the job application ID from the offer
+                    const jobApplicationId = jobOffers.find(offer => offer.id === offerId)?.jobApplicationId;
+                    
+                    if (jobApplicationId) {
+                        const unapplyResponse = await fetch(`/api/jobApplication/${jobApplicationId}/unapply`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+                        
+                        if (!unapplyResponse.ok) {
+                            console.error(`Failed to unapply from job: ${unapplyResponse.status}`);
+                        } else {
+                            // Remove the job from applied jobs list in the UI
+                            setAppliedJobs(prev => prev.filter(job => job.id !== jobApplicationId));
+                        }
+                    }
+                } catch (unapplyError) {
+                    console.error("Error unapplying from job:", unapplyError);
+                    // Continue with the offer update even if unapply fails
+                }
+            }
+
             setJobOffers((prev) =>
                 prev.map((offer) =>
                     offer.id === offerId ? { ...offer, status } : offer
                 )
             );
 
-            alert(`Offer ${status.toLowerCase()} successfully!`);
+            alert(`Offer ${status.toLowerCase()} successfully!${status === "DECLINED" ? " You have been unapplied from this job." : ""}`);
         } catch (error) {
             console.error("Error updating offer status:", error);
             alert(`Failed to ${status.toLowerCase()} offer: ${error.message}`);

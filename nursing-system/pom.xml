@@ -228,7 +228,8 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>target/classes/static</outputDirectory>
+							<overwrite>true</overwrite>
+							<outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
 							<resources>
 								<resource>
 									<directory>src/main/frontend/build</directory>

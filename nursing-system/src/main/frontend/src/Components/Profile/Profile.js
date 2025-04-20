@@ -12,6 +12,33 @@ const Profile = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [reviews, setReviews] = useState([]);
+    const [hiredJobs, setHiredJobs] = useState([]);
+
+    // Function to fetch job details for hired jobs
+    const fetchHiredJobs = async (hiredJobIds) => {
+        if (!hiredJobIds || hiredJobIds.length === 0) return;
+        
+        try {
+            const token = localStorage.getItem("jwtToken");
+            const jobPromises = hiredJobIds.map(jobId => 
+                fetch(`/api/jobApplication/${jobId}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }).then(res => {
+                    if (!res.ok) throw new Error(`Failed to fetch job ${jobId}`);
+                    return res.json();
+                })
+            );
+            
+            const jobsData = await Promise.all(jobPromises);
+            setHiredJobs(jobsData);
+        } catch (error) {
+            console.error("Error fetching hired jobs:", error);
+        }
+    };
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -37,6 +64,11 @@ const Profile = () => {
 
                 const userData = await response.json();
                 setUser(userData);
+                
+                // If the user is a nurse, fetch their hired jobs
+                if (userData.role === "NURSE" && userData.nurseDetails?.hiredJobsIds?.length > 0) {
+                    await fetchHiredJobs(userData.nurseDetails.hiredJobsIds);
+                }
                 
                 // Handle reviews from user data
                 if (userData.ratingHistory) {
@@ -189,6 +221,36 @@ const Profile = () => {
                     )}
                 </div>
             </div>
+            
+            {/* Hired Jobs Section for Nurses */}
+            {user?.role === "NURSE" && (
+                <div className="profile-hired-jobs">
+                    <h2>Current Positions</h2>
+                    {hiredJobs.length > 0 ? (
+                        <div className="hired-jobs-list">
+                            {hiredJobs.map((job, index) => (
+                                <div key={index} className="hired-job-item">
+                                    <h3>{job.jobTitle}</h3>
+                                    <div className="hired-job-details">
+                                        <p><strong>Hospital:</strong> {job.hospitalName || "Unknown Hospital"}</p>
+                                        <p><strong>Start Date:</strong> {job.startDate ? new Date(job.startDate).toLocaleDateString() : "Not specified"}</p>
+                                        <p><strong>End Date:</strong> {job.endDate ? new Date(job.endDate).toLocaleDateString() : "Not specified"}</p>
+                                        <p><strong>Pay Range:</strong> ${job.minPay || 0} - ${job.maxPay || 0} per hour</p>
+                                    </div>
+                                    <button 
+                                        className="view-job-details-btn"
+                                        onClick={() => navigate(`/job/${job.id}`)}
+                                    >
+                                        View Details
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="no-hired-jobs-message">You haven't been hired for any positions yet.</p>
+                    )}
+                </div>
+            )}
             
             <div className="profile-reviews">
                 <h2>Reviews & Ratings</h2>

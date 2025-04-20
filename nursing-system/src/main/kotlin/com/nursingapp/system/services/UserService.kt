@@ -52,10 +52,29 @@ class UserService(private val userRepository: UserRepository) {
             user.role == Role.NURSE
         }
     }
-    fun updateNurseHiredStatus(hiredStatus: Boolean, user: User) {
+    fun updateNurseHiredStatus(jobApplicationId: String, user: User) {
+        val currentHiredJobs = user.nurseDetails?.hiredJobsIds ?: emptyList()
+        val updatedHiredJobs = if (!currentHiredJobs.contains(jobApplicationId)) {
+            currentHiredJobs + jobApplicationId
+        } else {
+            currentHiredJobs
+        }
+        
         val updatedNurseDetails = user.nurseDetails?.copy(
-            isHired = hiredStatus
-        ) ?: NurseDetails(isHired = true)
+            hiredJobsIds = updatedHiredJobs
+        ) ?: NurseDetails(hiredJobsIds = listOf(jobApplicationId))
+
+        val updatedUser = user.copy(nurseDetails = updatedNurseDetails)
+        userRepository.save(updatedUser)
+    }
+    
+    fun removeNurseHiredStatus(jobApplicationId: String, user: User) {
+        val currentHiredJobs = user.nurseDetails?.hiredJobsIds ?: emptyList()
+        val updatedHiredJobs = currentHiredJobs.filter { it != jobApplicationId }
+        
+        val updatedNurseDetails = user.nurseDetails?.copy(
+            hiredJobsIds = updatedHiredJobs
+        ) ?: NurseDetails()
 
         val updatedUser = user.copy(nurseDetails = updatedNurseDetails)
         userRepository.save(updatedUser)
