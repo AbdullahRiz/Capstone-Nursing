@@ -26,7 +26,7 @@ data class NurseDetails(
     val appliedJobsIds: List<String> = emptyList(),
     val certifications: List<String> = emptyList(),
     val experienceYears: Int = 0,
-    val isHired: Boolean = false,
+    val hiredJobsIds: List<String> = emptyList(),
     val hourlyRate: Double = 0.0,
     val accountNumber: Int? = null,
     val routingNumber: Int? = null,

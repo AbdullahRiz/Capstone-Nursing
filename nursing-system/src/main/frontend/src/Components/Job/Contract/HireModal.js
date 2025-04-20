@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createPortal } from 'react-dom';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "./HireModel.css";
+import "./HireModal.css";
 
 const HireModal = ({
                        visible,
@@ -175,6 +175,7 @@ const HireModal = ({
                 },
                 body: JSON.stringify({
                     email: nurseEmail,
+                    jobApplicationId: job.id,
                     ...formData,
                 }),
             });
@@ -303,8 +304,7 @@ const HireModal = ({
                             minDate={new Date()}
                             showMonthDropdown
                             showYearDropdown
-                            dropdownMode="select"
-                         showMonthYearDropdown/>
+                            dropdownMode="select"/>
                     </div>
 
                     <div className="date-field">
@@ -327,8 +327,7 @@ const HireModal = ({
                             }
                             showMonthDropdown
                             showYearDropdown
-                            dropdownMode="select"
-                         showMonthYearDropdown/>
+                            dropdownMode="select"/>
                     </div>
                 </div>
 
