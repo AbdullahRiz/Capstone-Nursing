@@ -38,6 +38,18 @@ const JobDetail = () => {
         hoursAvailable: "",
     });
 
+    // Function to clear nurse cache to ensure fresh data
+    const clearNurseCache = () => {
+        // Clear any cached nurse data to ensure we get fresh data
+        if (job && job.applicants) {
+            job.applicants.forEach(applicant => {
+                if (applicant.applicantId) {
+                    sessionStorage.removeItem(`nurse_${applicant.applicantId}`);
+                }
+            });
+        }
+    };
+    
     // Fetch job details and user details in parallel
     useEffect(() => {
         const fetchData = async () => {
@@ -106,7 +118,19 @@ const JobDetail = () => {
         };
         
         fetchData();
+        
+        // Clear nurse cache when component unmounts to ensure fresh data on next mount
+        return () => {
+            clearNurseCache();
+        };
     }, [id]);
+    
+    // Clear nurse cache when job data changes
+    useEffect(() => {
+        if (job) {
+            clearNurseCache();
+        }
+    }, [job]);
 
     // Handle day selection for application
     const handleDaySelection = (day) => {

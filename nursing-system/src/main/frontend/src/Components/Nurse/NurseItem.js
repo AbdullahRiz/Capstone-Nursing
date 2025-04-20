@@ -236,14 +236,37 @@ const NurseItem = ({ nurse, job }) => {
                 onClose={() => setShowHireModal(false)}
                 formData={formData}
                 setFormData={setFormData}
-                setIsHired={setIsHired}
+                setIsHired={(hired) => {
+                    setIsHired(hired);
+                    
+                    // Update the sessionStorage cache when a nurse is hired
+                    if (hired && nurseDetails) {
+                        const updatedNurseDetails = {
+                            ...nurseDetails,
+                            hiredJobsIds: [...(nurseDetails.hiredJobsIds || []), job.id]
+                        };
+                        sessionStorage.setItem(`nurse_${nurse.applicantId}`, JSON.stringify(updatedNurseDetails));
+                    }
+                }}
                 setShowHireModal={setShowHireModal}
                 job={job}
                 nurseId={nurse.applicantId}
                 nurseEmail={nurseDetails.email}
                 onHireSuccess={(finalData) => {
                     console.log("Complete Data sent from HireModal =>", finalData);
+                    
+                    // Update the hired status and sessionStorage
                     setIsHired(true);
+                    
+                    // Update the sessionStorage cache
+                    if (nurseDetails) {
+                        const updatedNurseDetails = {
+                            ...nurseDetails,
+                            hiredJobsIds: [...(nurseDetails.hiredJobsIds || []), job.id]
+                        };
+                        sessionStorage.setItem(`nurse_${nurse.applicantId}`, JSON.stringify(updatedNurseDetails));
+                    }
+                    
                     setShowHireModal(false);
                 }}
             />
