@@ -30,6 +30,7 @@ data class NurseDetails(
     val hourlyRate: Double = 0.0,
     val accountNumber: Int? = null,
     val routingNumber: Int? = null,
+    val isTravelNurse: Boolean = false,
 )
 
 data class HospitalDetails(

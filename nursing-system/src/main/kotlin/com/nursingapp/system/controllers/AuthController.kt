@@ -124,28 +124,42 @@ data class LoginResponse(
 class SignupController(@Autowired val userService: UserService) {
 
     @PutMapping("/signup")
-    fun signup(@RequestBody user: User): ResponseEntity<String> {
-        if (!isValidEmail(user.email)) {
+    fun signup(@RequestBody signupRequest: SignupRequest): ResponseEntity<String> {
+        if (!isValidEmail(signupRequest.email)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email format")
         }
 
-        if (user.password.length < 6) {
+        if (signupRequest.password.length < 6) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password must be at least 6 characters long")
         }
 
-        userService.findByEmail(user.email)?.let {
+        userService.findByEmail(signupRequest.email)?.let {
             return ResponseEntity.status(422).body("E-Mail address already exists!")
         }
 
         val bcrypt = BCryptPasswordEncoder()
 
         try {
-            val hashedPw = bcrypt.encode(user.password)
+            val hashedPw = bcrypt.encode(signupRequest.password)
+            
+            // Create appropriate details based on role
+            val nurseDetails = if (signupRequest.role == Role.NURSE) {
+                com.nursingapp.system.models.NurseDetails(
+                    isTravelNurse = signupRequest.isTravelNurse ?: false
+                )
+            } else null
+            
+            val hospitalDetails = if (signupRequest.role == Role.HOSPITAL) {
+                com.nursingapp.system.models.HospitalDetails()
+            } else null
+            
             val newUser = User(
-                email = user.email,
+                email = signupRequest.email,
                 password = hashedPw,
-                name = user.name,
-                role = user.role
+                name = signupRequest.name,
+                role = signupRequest.role,
+                nurseDetails = nurseDetails,
+                hospitalDetails = hospitalDetails
             )
             userService.create(newUser)
             return ResponseEntity.status(201).body("User creation successful!")
@@ -154,3 +168,11 @@ class SignupController(@Autowired val userService: UserService) {
         }
     }
 }
+
+data class SignupRequest(
+    val email: String,
+    val password: String,
+    val name: String?,
+    val role: Role,
+    val isTravelNurse: Boolean? = false
+)

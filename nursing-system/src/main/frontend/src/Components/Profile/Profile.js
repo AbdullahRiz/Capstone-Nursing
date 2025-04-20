@@ -203,6 +203,51 @@ const Profile = () => {
                                 <span className="info-label">Availability:</span>
                                 <span className="info-value">{user?.availableHours ? `${user.availableHours} hours/week` : "Not provided"}</span>
                             </div>
+                            <div className="profile-info-item">
+                                <span className="info-label">Travel Nurse:</span>
+                                <span className="info-value">
+                                    <div className="travel-nurse-toggle">
+                                        <input
+                                            type="checkbox"
+                                            id="travel-nurse-toggle"
+                                            checked={user?.nurseDetails?.isTravelNurse || false}
+                                            onChange={async () => {
+                                                try {
+                                                    const token = localStorage.getItem("jwtToken");
+                                                    const response = await fetch("/api/updateTravelNurseStatus", {
+                                                        method: "POST",
+                                                        headers: {
+                                                            "Content-Type": "application/json",
+                                                            Authorization: `Bearer ${token}`,
+                                                        },
+                                                        body: JSON.stringify({
+                                                            isTravelNurse: !(user?.nurseDetails?.isTravelNurse || false)
+                                                        }),
+                                                    });
+                                                    
+                                                    if (response.ok) {
+                                                        // Update the user state with the new isTravelNurse value
+                                                        setUser(prevUser => ({
+                                                            ...prevUser,
+                                                            nurseDetails: {
+                                                                ...(prevUser?.nurseDetails || {}),
+                                                                isTravelNurse: !(prevUser?.nurseDetails?.isTravelNurse || false)
+                                                            }
+                                                        }));
+                                                    } else {
+                                                        console.error("Failed to update travel nurse status");
+                                                    }
+                                                } catch (error) {
+                                                    console.error("Error updating travel nurse status:", error);
+                                                }
+                                            }}
+                                        />
+                                        <label htmlFor="travel-nurse-toggle">
+                                            {user?.nurseDetails?.isTravelNurse ? "Yes" : "No"}
+                                        </label>
+                                    </div>
+                                </span>
+                            </div>
                         </div>
                     )}
                     

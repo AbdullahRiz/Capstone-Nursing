@@ -3,13 +3,17 @@ import "./signup.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
+import { useNavigate } from "react-router-dom";
+
 const Signup = () => {
+  const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState(""); // Local state for role selection
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     role: selectedRole === "Nurse" ? "NURSE" : "HOSPITAL",
+    isTravelNurse: false,
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -43,6 +47,7 @@ const Signup = () => {
       email: formData.email,
       password: formData.password,
       role: selectedRole === "Nurse" ? "NURSE" : "HOSPITAL",
+      isTravelNurse: selectedRole === "Nurse" ? formData.isTravelNurse : undefined
     };
 
     console.log("Form Data Submitted:", bodyData);
@@ -58,7 +63,11 @@ const Signup = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      alert("Signup Successful!");
+      alert("Signup Successful! Redirecting to login page...");
+      // Redirect to signin page after successful signup
+      setTimeout(() => {
+        navigate("/signin");
+      }, 1500); // Short delay to show the alert
     } catch (error) {
       console.error("Error during fetch:", error);
       alert(`Signup failed: ${error.message}`);
@@ -179,6 +188,24 @@ const Signup = () => {
                     <option value="CNOR">Certified Operating Room Nurse (CNOR)</option>
                     <option value="CRNA">Certified Registered Nurse Anesthetist (CRNA)</option>
                   </select>
+                </div>
+                
+                <div className="form-group">
+                  <div className="travel-nurse-checkbox">
+                    <input
+                      type="checkbox"
+                      id="isTravelNurse"
+                      name="isTravelNurse"
+                      checked={formData.isTravelNurse}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        isTravelNurse: e.target.checked
+                      })}
+                    />
+                    <label htmlFor="isTravelNurse">
+                      I am a Travel Nurse
+                    </label>
+                  </div>
                 </div>
               </>
           )}

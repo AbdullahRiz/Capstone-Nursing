@@ -79,6 +79,15 @@ class UserService(private val userRepository: UserRepository) {
         val updatedUser = user.copy(nurseDetails = updatedNurseDetails)
         userRepository.save(updatedUser)
     }
+    
+    fun updateTravelNurseStatus(isTravelNurse: Boolean, user: User): User {
+        val updatedNurseDetails = user.nurseDetails?.copy(
+            isTravelNurse = isTravelNurse
+        ) ?: NurseDetails(isTravelNurse = isTravelNurse)
+
+        val updatedUser = user.copy(nurseDetails = updatedNurseDetails)
+        return userRepository.save(updatedUser)
+    }
     fun updateNurseHourlyRate(hourlyRate: Double, user: User) {
         val updatedNurseDetails = user.nurseDetails?.copy(
             hourlyRate = hourlyRate

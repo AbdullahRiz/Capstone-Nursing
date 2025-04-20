@@ -135,3 +135,29 @@
 .password-toggle-btn:hover i {
   color: #333;
 }
+
+/* Container */
+.travel-nurse-checkbox {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 0.5rem 0.75rem;       /* 8px 12px */
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+/* Native checkbox + brand accent */
+.travel-nurse-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-right: 0.5rem;         /* 8px */
+  cursor: pointer;
+  accent-color: #53c4f8;        /* tint the checkmark and box when checked */
+}
+
+/* Label sits flush next to the box */
+.travel-nurse-checkbox label {
+  margin-top: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}

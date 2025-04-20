@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile
 @RestController
 class NurseOperations (
     @Autowired val userService: UserService,
+    @Autowired val jwtUtil: JwtUtil,
     private val contractStorageService: ContractStorageService
 ) {
     @GetMapping("/searchNurses")
@@ -66,6 +67,27 @@ class NurseOperations (
 
         return ResponseEntity.ok(PaymentSetupResponse((nurse.nurseDetails?.routingNumber != null && nurse.nurseDetails.accountNumber != null).toString()))
     }
+    
+    @PostMapping("/updateTravelNurseStatus")
+    fun updateTravelNurseStatus(
+        @RequestBody travelNurseRequest: TravelNurseRequest,
+        @RequestHeader("Authorization") token: String
+    ): ResponseEntity<TravelNurseResponse> {
+        try {
+            val jwt = token.removePrefix("Bearer ").trim()
+            val userEmail = jwtUtil.extractUsername(jwt)
+            val user = userService.findByEmail(userEmail) ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(TravelNurseResponse("User not found"))
+            
+            if (user.role != Role.NURSE) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(TravelNurseResponse("Only nurses can update travel nurse status"))
+            }
+            
+            val updatedUser = userService.updateTravelNurseStatus(travelNurseRequest.isTravelNurse, user)
+            return ResponseEntity.ok(TravelNurseResponse("Travel nurse status updated successfully", updatedUser.nurseDetails?.isTravelNurse ?: false))
+        } catch (ex: Exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(TravelNurseResponse("Error updating travel nurse status: ${ex.message}"))
+        }
+    }
 }
 
 fun hasTwoDecimalPlaces(number: Double): Boolean {
@@ -85,4 +107,13 @@ data class HourlyRateResponse(
 
 data class PaymentSetupResponse(
     val message: String
+)
+
+data class TravelNurseRequest(
+    val isTravelNurse: Boolean
+)
+
+data class TravelNurseResponse(
+    val message: String,
+    val isTravelNurse: Boolean = false
 )
