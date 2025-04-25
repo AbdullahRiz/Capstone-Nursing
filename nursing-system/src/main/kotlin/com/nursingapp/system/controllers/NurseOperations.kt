@@ -27,6 +27,14 @@ class NurseOperations (
         return ResponseEntity.ok(nurses)
     }
 
+    @GetMapping("/getTravelNurses")
+    fun getTravelNurses(
+        @RequestHeader("Authorization") token: String
+    ): ResponseEntity<List<User>> {
+        val nurses = userService.getTravelNurses()
+        return ResponseEntity.ok(nurses)
+    }
+
     @PostMapping("/setNurseHourlyRate")
     fun setNurseHourlyRate(
         @RequestBody hourlyRateRequest: HourlyRateRequest,

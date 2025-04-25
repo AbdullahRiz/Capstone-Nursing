@@ -52,6 +52,13 @@ class UserService(private val userRepository: UserRepository) {
             user.role == Role.NURSE
         }
     }
+
+    fun getTravelNurses(): List<User> {
+        return userRepository.findAll().filter { user ->
+            user.role == Role.NURSE && user.nurseDetails?.isTravelNurse == true
+        }
+    }
+
     fun updateNurseHiredStatus(jobApplicationId: String, user: User) {
         val currentHiredJobs = user.nurseDetails?.hiredJobsIds ?: emptyList()
         val updatedHiredJobs = if (!currentHiredJobs.contains(jobApplicationId)) {
