@@ -17,6 +17,7 @@ import HospitalDashboard from "../Components/Dashboard/HospitalDashboard";
 import CreateJobApplication from "../Components/Job/CreateJobApplication";
 import Profile from "../Components/Profile/Profile";
 import ContractsPage from "../Components/Contracts/ContractsPage"; // Create this file later
+import TravlingNurse from "../Components/Dashboard/TravelingNurse";
 
 
 // Dashboard redirect component 
@@ -131,6 +132,11 @@ const AppContent = () => {
                 <Route path="/contracts" element={
                     <ProtectedRoute>
                         <ContractsPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/TravlingNurse" element={
+                    <ProtectedRoute>
+                        <TravlingNurse />
                     </ProtectedRoute>
                 } />
                 

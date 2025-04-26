@@ -4,19 +4,12 @@
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
     width: 350px; /* or whatever fits your layout */
     transition: height 0.5s ease;
-}
-
-/* COLLAPSE mode (min height for header only) */
-.filter-container.collapsed {
-    height: 67px; /* or enough for just the header */
-}
-
-/* EXPAND mode (height large enough for full content) */
-.filter-container.expanded {
-    height: 100%; /* adjust this if you prefer fixed height */
+    align-items: center;
+    max-height: max-content;
+    align-content: center;
+    justify-content: center;
 }
 
 /* Header always visible */
@@ -67,7 +60,10 @@
 /* Form styles */
 .filter-form {
     padding: 20px;
+    overflow: visible;
     transition: opacity 0.5s ease;
+    /*overflow-y: auto;*/
+    align-items: center;
 }
 
 /* Hide content on collapse */
@@ -76,6 +72,8 @@
 }
 .form-group {
     margin-bottom: 15px;
+    overflow: visible;
+
 }
 
 .form-group label {
@@ -96,20 +94,27 @@
 
 .form-actions {
     display: flex;
-    justify-content: flex-start;
+    justify-content: Center;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: auto;
+    background: #fff;
+}
+
+button {
+    display: inline-block;
 }
 
 .filter-button,
 .reset-button {
-    padding: 10px 20px;
+    padding: 10px 25px;
     border-radius: 8px;
     font-size: 0.9rem;
     font-weight: bold;
     border: none;
     cursor: pointer;
+    align-items: center;
     transition: background-color 0.3s ease;
+    margin-right: 15px;
 }
 
 .filter-button {
@@ -129,3 +134,103 @@
 .reset-button:hover {
     background-color: #5a6268;
 }
+
+/*Locations Selection*/
+
+.form-group2 {
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1000;
+}
+
+.form-group2 label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.form-group2 input {
+    width: 50%;
+    align-content: flex-start;
+    align-items: flex-start;
+    padding: 10px;
+    font-size: 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    z-index: 1000;
+}
+
+.dropdown-multiselect {
+    position: relative;
+    user-select: none;
+    width: 100%;
+    z-index: 1000;
+}
+
+.dropdown-header {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    z-index: 10;
+}
+
+.dropdown-arrow {
+    font-size: 14px;
+}
+
+.dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 180px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-top: 5px;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: max-height 0.3s ease;
+    white-space: nowrap;
+    overflow-x: hidden;
+}
+
+.dropdown-item {
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*justify-content: flex-start;*/
+    /*padding: 8px 10px;*/
+    cursor: pointer;
+    /*font-size: 14px;*/
+    /*white-space: nowrap;*/
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
+    /*gap: 6px;*/
+}
+
+.dropdown-item input {
+    flex-shrink: 0;
+}
+
+.dropdown-item:hover {
+    background-color: #f5f5f5;
+}
+
+
+.dropdown-label {
+    flex-grow: 1;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
