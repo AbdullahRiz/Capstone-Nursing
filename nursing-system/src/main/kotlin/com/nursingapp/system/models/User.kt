@@ -14,6 +14,7 @@ data class User(
     val ratingHistory: Map<String, RatingItem> = emptyMap(),
     val nurseDetails: NurseDetails? = null,
     val hospitalDetails: HospitalDetails? = null,
+    val individualDetails: IndividualDetails? = null,
 )
 
 data class RatingItem(
@@ -38,6 +39,11 @@ data class HospitalDetails(
     val phoneNumber: String? = null,
 )
 
+data class IndividualDetails(
+    val address: String? = null,
+    val phoneNumber: String? = null,
+)
+
 enum class Role {
-    NURSE, HOSPITAL
+    NURSE, HOSPITAL, INDIVIDUAL
 }
