@@ -12,7 +12,7 @@ const Signup = () => {
     name: "",
     email: "",
     password: "",
-    role: selectedRole === "Nurse" ? "NURSE" : "HOSPITAL",
+    role: selectedRole.toUpperCase(),
     isTravelNurse: false,
   });
 
@@ -155,6 +155,15 @@ const Signup = () => {
                     onChange={(e) => setSelectedRole(e.target.value)}
                 />
                 Hospital
+              </label>
+              <label>
+                <input
+                    type="radio"
+                    value="Individual"
+                    checked={selectedRole === "Individual"}
+                    onChange={(e) => setSelectedRole(e.target.value)}
+                />
+                Individual
               </label>
             </div>
           </div>

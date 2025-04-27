@@ -152,6 +152,10 @@ class SignupController(@Autowired val userService: UserService) {
             val hospitalDetails = if (signupRequest.role == Role.HOSPITAL) {
                 com.nursingapp.system.models.HospitalDetails()
             } else null
+
+            val individualDetails = if (signupRequest.role == Role.INDIVIDUAL) {
+                com.nursingapp.system.models.IndividualDetails()
+            } else null
             
             val newUser = User(
                 email = signupRequest.email,
@@ -159,7 +163,8 @@ class SignupController(@Autowired val userService: UserService) {
                 name = signupRequest.name,
                 role = signupRequest.role,
                 nurseDetails = nurseDetails,
-                hospitalDetails = hospitalDetails
+                hospitalDetails = hospitalDetails,
+                individualDetails = individualDetails
             )
             userService.create(newUser)
             return ResponseEntity.status(201).body("User creation successful!")
