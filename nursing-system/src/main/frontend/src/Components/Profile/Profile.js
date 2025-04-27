@@ -5,6 +5,7 @@ import Footer from "../Footer/Footer";
 import "./Profile.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { useLocation } from "react-router-dom";
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -13,6 +14,9 @@ const Profile = () => {
     const [error, setError] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [hiredJobs, setHiredJobs] = useState([]);
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const highlightTravel = queryParams.get("highlightTravel") === "true";
 
     // Function to fetch job details for hired jobs
     const fetchHiredJobs = async (hiredJobIds) => {
@@ -211,6 +215,7 @@ const Profile = () => {
                                             type="checkbox"
                                             id="travel-nurse-toggle"
                                             checked={user?.nurseDetails?.isTravelNurse || false}
+
                                             onChange={async () => {
                                                 try {
                                                     const token = localStorage.getItem("jwtToken");
@@ -224,9 +229,9 @@ const Profile = () => {
                                                             isTravelNurse: !(user?.nurseDetails?.isTravelNurse || false)
                                                         }),
                                                     });
-                                                    
+
                                                     if (response.ok) {
-                                                        // Update the user state with the new isTravelNurse value
+
                                                         setUser(prevUser => ({
                                                             ...prevUser,
                                                             nurseDetails: {
@@ -234,6 +239,11 @@ const Profile = () => {
                                                                 isTravelNurse: !(prevUser?.nurseDetails?.isTravelNurse || false)
                                                             }
                                                         }));
+
+                                                        setTimeout(() => {
+                                                            navigate("/nurseDashboard", { replace: true });
+                                                            window.location.reload();
+                                                        }, 500);
                                                     } else {
                                                         console.error("Failed to update travel nurse status");
                                                     }
@@ -241,6 +251,8 @@ const Profile = () => {
                                                     console.error("Error updating travel nurse status:", error);
                                                 }
                                             }}
+
+
                                         />
                                         <label htmlFor="travel-nurse-toggle">
                                             {user?.nurseDetails?.isTravelNurse ? "Yes" : "No"}

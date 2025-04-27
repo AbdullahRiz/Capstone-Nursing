@@ -6,7 +6,7 @@ import JobApplicationCard from "../Job/JobApplicationCard";
 import Footer from "../Footer/Footer";
 import {useNavigate} from "react-router-dom";
 
-const JobListDashboard = () => {
+const TravlingNurse = () => {
     const navigate = useNavigate()
 
     const [user, setUser] = useState(null);
@@ -24,8 +24,10 @@ const JobListDashboard = () => {
         endDate: "",
         minPay: "",
         maxPay: "",
+        locations: [],
     });
 
+    // Recommanded Jobs
 
     const getRecommendedJobs = () => {
         if (!user?.nurseDetails?.skillSet || user.nurseDetails.skillSet.length === 0) {
@@ -46,7 +48,6 @@ const JobListDashboard = () => {
             return matchPercentage >= 30; // Only recommend if >= 30% match
         });
     };
-
 
 
     // Fetch data only once on component mount
@@ -90,7 +91,41 @@ const JobListDashboard = () => {
                 setUser(userData);
                 setJobApplications(jobsData);
 
-                console.log("User SkillSet:", userData?.nurseDetails?.skillSet);
+                if (userData.nurseDetails?.isTravelNurse) {
+                    try {
+                        //
+                        const locationsData = [
+                            "New York",
+                            "Los Angeles",
+                            "Chicago",
+                            "Miami",
+                            "Houston",
+                            "Boston",
+                            "San Francisco",
+                        ];
+                        setLocations(locationsData);
+
+                        // For backend API when it is ready
+
+                        // const locationResponse = await fetch("/api/listAvailableLocations", {
+                        //     method: "GET",
+                        //     headers: {
+                        //         "Content-Type": "application/json",
+                        //         Authorization: `Bearer ${token}`,
+                        //     },
+                        // });
+                        //
+                        // if (locationResponse.ok) {
+                        //     const locationsData = await locationResponse.json(); // Must be an array of strings
+                        //     setLocations(locationsData);
+                        // } else {
+                        //     console.error("Failed to fetch available locations:", locationResponse.status);
+                        // }
+
+                    } catch (locErr) {
+                        console.error("Error fetching locations:", locErr);
+                    }
+                }
 
             } catch (err) {
                 console.error("Error during fetchData:", err);
@@ -101,7 +136,7 @@ const JobListDashboard = () => {
         };
 
         fetchData();
-    }, []);
+    }, [navigate]);
 
     // Function to fetch job applications with filters
     const fetchFilteredJobApplications = async (filterParams) => {
@@ -157,7 +192,7 @@ const JobListDashboard = () => {
             endDate: filters.endDate ? new Date(filters.endDate).toISOString() : null,
             minPay: filters.minPay ? parseFloat(filters.minPay) : null,
             maxPay: filters.maxPay ? parseFloat(filters.maxPay) : null,
-
+            locations: filters.locations || [],
         };
         fetchFilteredJobApplications(filterParams);
     };
@@ -172,7 +207,7 @@ const JobListDashboard = () => {
             endDate: "",
             minPay: "",
             maxPay: "",
-
+            locations: [],
         });
         fetchFilteredJobApplications({});
     };
@@ -189,13 +224,16 @@ const JobListDashboard = () => {
                     onFilterChange={handleFilterChange}
                     onSubmit={handleSubmit}
                     onReset={handleReset}
+                    travelModeOn={user?.nurseDetails?.isTravelNurse}
+                    availableLocations={locations}
                 />
 
                 <main className="main-content">
                     <header className="dashboard-header">
                         <div>
-                            <h1>Job Applications</h1>
-                            <p>Hello, {user.name || "Guest"}</p>
+                            <h1>Traveling Jobs</h1>
+                            <p>Hello,<strong> {user.name || "Guest"}</strong></p>
+
                         </div>
                     </header>
 
@@ -280,4 +318,4 @@ const JobListDashboard = () => {
     );
 };
 
-export default JobListDashboard;
+export default TravlingNurse;

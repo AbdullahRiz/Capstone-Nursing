@@ -488,10 +488,32 @@ const NurseDashboard = () => {
 
                     <div className="nurse-card">
                         <div className="nurse-filter-bar">
-                            <h4 className="nurse-card-title">Set Availability:</h4>
+                            {/* Availability */}
+                            <div className="availability-travel-wrapper">
+                                <div className="set-availability">Set Availability:</div>
+                                <div
+                                    className="travel-mode"
+                                    style={{ cursor: "pointer" }} // so it looks clickable
+                                    onClick={() => navigate("/profile")} // redirect to profile on click
+                                >
+                                    <i
+                                        className="bi bi-suitcase-fill travel-icon"
+                                        style={{
+                                            color: user?.nurseDetails?.isTravelNurse ? 'green' : 'gray',
+                                            marginRight: '6px',
+                                            fontSize: '1.3rem'
+                                        }}
+                                    ></i>
+                                    Travel Mode:
+                                    <span style={{
+                                        color: user?.nurseDetails?.isTravelNurse ? 'green' : 'red', marginLeft: '5px', fontWeight: 'bold' }}> {user?.nurseDetails?.isTravelNurse ? 'ON' : 'OFF'}
+                                    </span>
+                                </div>
+                            </div>
 
+                            {/* Days */}
                             <div className="week-wrapper">
-                                <Week selectedDays={selectedDays} setSelectedDays={setSelectedDays}/>
+                                <Week selectedDays={selectedDays} setSelectedDays={setSelectedDays} />
                             </div>
 
                             {/* Hours/Day */}
@@ -511,7 +533,9 @@ const NurseDashboard = () => {
                                     >
                                         <option value="">Select hours</option>
                                         {[4, 6, 8, 10, 12].map((hr) => (
-                                            <option key={hr} value={hr}>{hr} hrs</option>
+                                            <option key={hr} value={hr}>
+                                                {hr} hrs
+                                            </option>
                                         ))}
                                         <option value="custom">Custom Hours</option>
                                     </select>
@@ -549,7 +573,9 @@ const NurseDashboard = () => {
                                     >
                                         <option value="">Select pay</option>
                                         {[45, 50, 60, 75, 90].map((amt) => (
-                                            <option key={amt} value={amt}>${amt}</option>
+                                            <option key={amt} value={amt}>
+                                                ${amt}
+                                            </option>
                                         ))}
                                         <option value="custom">Custom Amount</option>
                                     </select>

@@ -66,3 +66,9 @@
         grid-template-columns: 1fr;
     }
 }
+
+.recommended-jobs-section p {
+    color: #888;
+    font-style: italic;
+    margin-top: 10px;
+}

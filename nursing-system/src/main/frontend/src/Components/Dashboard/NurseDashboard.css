@@ -435,14 +435,7 @@
     gap: 6rem;
 }
 
-.nurse-filter-bar {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 80px;
-    margin-top: 20px;
-    flex-direction: row;
-}
+
 
 .week-wrapper {
     display: flex;
@@ -469,22 +462,7 @@
     color: #333;
 }
 
-.nurse-card {
-    background-color: #ffffff;
-    padding: 20px 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    margin-bottom: 30px;
-    margin-left: auto;
-    margin-right: auto;
-}
 
-.nurse-card-title {
-    margin-bottom: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-}
 
 /* Style for download contract link */
 .download-btn {
@@ -522,4 +500,130 @@
 
 .file-upload-input {
     display: none;
+}
+.set-availability{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+/*.nurse-filter-bar {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: flex-start;*/
+/*    gap: 80px;*/
+/*    margin-top: 20px;*/
+/*    flex-direction: row;*/
+/*}*/
+
+/*.nurse-card {*/
+/*    background-color: #ffffff;*/
+/*    padding: 20px 25px;*/
+/*    border-radius: 12px;*/
+/*    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);*/
+/*    margin-bottom: 30px;*/
+/*    margin-left: auto;*/
+/*    margin-right: auto;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: flex-start;*/
+/*}*/
+
+/*.nurse-card-title {*/
+/*    margin-bottom: 10px;*/
+/*    font-size: 16px;*/
+/*    font-weight: bold;*/
+/*    color: #333;*/
+/*}*/
+
+/*TRAVELING NURSE*/
+
+.travel-nurse-active-banner {
+    background-color: #e0f7fa;
+    color: #00796b;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.nurse-card {
+    background-color: #ffffff;
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    width:  90rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 40px;
+}
+
+/* Left side Availability + Travel Mode */
+
+
+.nurse-filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width:  100rem;
+    gap: 100px;
+}
+
+.availability-travel-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 30px;
+}
+
+/* Travel mode row */
+.travel-mode {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Days of week */
+.week-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Days of week label */
+.week-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Common styling for fields */
+.nurse-filter-field {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    font-weight: 500;
+    gap: 6px;
+}
+
+/* Dropdowns and inputs */
+.nurse-filter-field select,
+.nurse-filter-field input {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    width: 160px;
+    background-color: #fff;
+    color: #333;
 }
