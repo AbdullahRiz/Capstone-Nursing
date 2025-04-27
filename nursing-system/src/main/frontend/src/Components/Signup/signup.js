@@ -46,7 +46,7 @@ const Signup = () => {
       name: formData.name,
       email: formData.email,
       password: formData.password,
-      role: selectedRole === "Nurse" ? "NURSE" : "HOSPITAL",
+      role: selectedRole.toUpperCase(),
       isTravelNurse: selectedRole === "Nurse" ? formData.isTravelNurse : undefined
     };
 
