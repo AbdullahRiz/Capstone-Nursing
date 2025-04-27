@@ -80,6 +80,13 @@ const Navigation = () => {
                   <Link className="nav-link" to="/dashboard">Dashboard</Link>
                 </li>
 
+                <li className="nav-item">
+                  <Link className="nav-link" to="/jobListDashboard">
+                    Jobs
+                  </Link>
+                </li>
+
+
                 {/* If Nurse */}
                 {userRole === "NURSE" && isTravelNurse && (
                     <li className="nav-item">
@@ -90,7 +97,7 @@ const Navigation = () => {
                 )}
 
                 {/* If Hospital / Individual */}
-                {(userRole === "HOSPITAL" || userRole === "INDIVIDUAL")&& (
+                { userRole === "INDIVIDUAL"&& (
                     <li className="nav-item">
                       <Link className="nav-link" to="/HireTravelNurse">
                         Travel Nurse's
@@ -101,11 +108,6 @@ const Navigation = () => {
               </>
           )}
 
-          {!isLoggedIn && (
-              <li className="nav-item">
-                <Link className="nav-link" to="/signin">Sign In</Link>
-              </li>
-          )}
 
           <li className="nav-item">
             <Link className="nav-link" to="/services">Services</Link>

@@ -88,6 +88,8 @@ const NurseDashboard = () => {
 
             setUser(userData);
 
+            console.log("User Role:", userData.role);
+
             // Fetch applied jobs
             try {
                 const appliedJobsResponse = await fetch("/api/listAppliedJobs", {

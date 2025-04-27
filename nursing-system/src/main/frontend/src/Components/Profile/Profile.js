@@ -366,8 +366,8 @@ const Profile = () => {
             <div className="profile-actions">
                 <button className="edit-profile-btn">Edit Profile</button>
                 <button className="change-password-btn">Change Password</button>
-                <button className="logout-btn" onClick={logoutHandler}>Logout</button>
             </div>
+            <button className="logout-btn" onClick={logoutHandler}>Logout</button>
         </div>
         <Footer />
         </>

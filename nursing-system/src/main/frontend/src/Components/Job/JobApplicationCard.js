@@ -30,3 +30,5 @@ const JobApplicationCard = ({ id, title, applicants, targetDate, updatedAt, isHi
 };
 
 export default JobApplicationCard;
+
+

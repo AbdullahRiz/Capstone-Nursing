@@ -18,6 +18,7 @@ const JobDetail = () => {
     const [showApplyModal, setShowApplyModal] = useState(false); // State to control the apply modal
     const [hasApplied, setHasApplied] = useState(false); // State to check if the nurse has already applied
     const [currentUserId, setCurrentUserId] = useState(null); // State to store the current user's ID
+    const [userRole, setUserRole] = useState(null); // State to store the user's role
 
     const navigate = useNavigate();
 
@@ -94,7 +95,8 @@ const JobDetail = () => {
                 
                 // Store the current user's ID
                 setCurrentUserId(userData.id);
-                
+                setUserRole(userData.role);
+
                 // Check if the current user is the author of the job
                 if (userData.role === "HOSPITAL" && userData.id === jobData.hospitalId) {
                     setIsAuthor(true);
@@ -249,6 +251,8 @@ const JobDetail = () => {
     if (!job) {
         return <p>No job details found.</p>;
     }
+
+    console.log("User Role:", userRole);
 
     return (
         <>
@@ -464,8 +468,10 @@ const JobDetail = () => {
                     </div>
                 )}
 
+
                 {/* Render applicants and filter only if the current user is the author */}
-                {isAuthor && (
+
+                {(isAuthor || userRole === "INDIVIDUAL") && (
                     <div className="job-admin-view">
                         {/* Filter Sidebar */}
                         <aside className="filter-sidebar">
