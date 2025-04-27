@@ -28,7 +28,6 @@ const TravlingNurse = () => {
     });
 
     // Recommanded Jobs
-
     const getRecommendedJobs = () => {
         if (!user?.nurseDetails?.skillSet || user.nurseDetails.skillSet.length === 0) {
             return [];
@@ -104,23 +103,6 @@ const TravlingNurse = () => {
                             "San Francisco",
                         ];
                         setLocations(locationsData);
-
-                        // For backend API when it is ready
-
-                        // const locationResponse = await fetch("/api/listAvailableLocations", {
-                        //     method: "GET",
-                        //     headers: {
-                        //         "Content-Type": "application/json",
-                        //         Authorization: `Bearer ${token}`,
-                        //     },
-                        // });
-                        //
-                        // if (locationResponse.ok) {
-                        //     const locationsData = await locationResponse.json(); // Must be an array of strings
-                        //     setLocations(locationsData);
-                        // } else {
-                        //     console.error("Failed to fetch available locations:", locationResponse.status);
-                        // }
 
                     } catch (locErr) {
                         console.error("Error fetching locations:", locErr);

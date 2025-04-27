@@ -90,6 +90,7 @@ const JobListDashboard = () => {
                 setUser(userData);
                 setJobApplications(jobsData);
 
+                console.log("User Role:", userData.role);
                 console.log("User SkillSet:", userData?.nurseDetails?.skillSet);
 
             } catch (err) {

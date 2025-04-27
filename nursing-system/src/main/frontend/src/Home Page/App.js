@@ -16,8 +16,9 @@ import NurseDashboard from "../Components/Dashboard/NurseDashboard";
 import HospitalDashboard from "../Components/Dashboard/HospitalDashboard";
 import CreateJobApplication from "../Components/Job/CreateJobApplication";
 import Profile from "../Components/Profile/Profile";
-import ContractsPage from "../Components/Contracts/ContractsPage"; // Create this file later
+import ContractsPage from "../Components/Contracts/ContractsPage";
 import TravlingNurse from "../Components/Dashboard/TravelingNurse";
+import HireTravelNurse from "../Components/Dashboard/HireTravelNurse";
 
 
 // Dashboard redirect component 
@@ -45,6 +46,7 @@ const DashboardRedirect = () => {
                 
                 if (response.ok) {
                     const userData = await response.json();
+                    // console.log("User Role fetched from API:", userData.role);
                     setUserRole(userData.role);
                 }
                 setLoading(false);
@@ -64,11 +66,14 @@ const DashboardRedirect = () => {
     if (!localStorage.getItem("jwtToken")) {
         return <Navigate to="/signin" />;
     }
-    
+
+    // console.log("UserRole for redirection:", userRole);
     if (userRole === "NURSE") {
         return <Navigate to="/nurseDashboard" />;
     } else if (userRole === "HOSPITAL") {
         return <Navigate to="/hospitalDashboard" />;
+    } else if (userRole === "INDIVIDUAL") {
+        return <Navigate to="/HireTravelNurse" />;
     } else {
         // Default fallback
         return <Navigate to="/jobListDashboard" />;
@@ -137,6 +142,11 @@ const AppContent = () => {
                 <Route path="/TravlingNurse" element={
                     <ProtectedRoute>
                         <TravlingNurse />
+                    </ProtectedRoute>
+                } />
+                <Route path="/HireTravelNurse" element={
+                    <ProtectedRoute>
+                        <HireTravelNurse />
                     </ProtectedRoute>
                 } />
                 

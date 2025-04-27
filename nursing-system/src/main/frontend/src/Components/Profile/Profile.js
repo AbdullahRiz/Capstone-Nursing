@@ -18,6 +18,13 @@ const Profile = () => {
     const queryParams = new URLSearchParams(location.search);
     const highlightTravel = queryParams.get("highlightTravel") === "true";
 
+    // Logout Function
+    const logoutHandler = () => {
+        localStorage.removeItem("jwtToken");
+        navigate("/signin");
+        window.location.reload();
+    };
+
     // Function to fetch job details for hired jobs
     const fetchHiredJobs = async (hiredJobIds) => {
         if (!hiredJobIds || hiredJobIds.length === 0) return;
@@ -121,6 +128,7 @@ const Profile = () => {
                     setReviews(reviewsArray);
                 }
                 
+                setLoading(false);
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching user profile:", error);
@@ -358,6 +366,7 @@ const Profile = () => {
             <div className="profile-actions">
                 <button className="edit-profile-btn">Edit Profile</button>
                 <button className="change-password-btn">Change Password</button>
+                <button className="logout-btn" onClick={logoutHandler}>Logout</button>
             </div>
         </div>
         <Footer />

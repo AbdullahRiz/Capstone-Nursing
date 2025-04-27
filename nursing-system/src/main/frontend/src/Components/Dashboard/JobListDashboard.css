@@ -72,3 +72,54 @@
     font-style: italic;
     margin-top: 10px;
 }
+
+.job-application-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 300px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s;
+}
+
+.job-application-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.card-info {
+    margin-bottom: 20px;
+}
+
+.info-block {
+    margin-bottom: 8px;
+}
+
+.card-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.hire-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.hire-button:hover {
+    background-color: #0056b3;
+}
