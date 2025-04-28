@@ -98,7 +98,8 @@ class JobApplicationService (private val jobApplicationRepository: JobApplicatio
         
         val updatedJobApplication = jobApplication.copy(
             applicants = updatedApplicants,
-            updatedAt = Instant.now()
+            updatedAt = Instant.now(),
+            hired = isHired // Update the top-level hired field
         )
         
         return jobApplicationRepository.save(updatedJobApplication)

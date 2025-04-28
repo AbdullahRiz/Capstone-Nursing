@@ -768,11 +768,11 @@ const NurseDashboard = () => {
                         </div>
                     </div>
                     <div className="nurse-applications-box">
-                        <h3>My Applications ({appliedJobs.length})</h3>
+                        <h3>My Applications ({appliedJobs.filter(job => !job.hired).length})</h3>
                         <div className="nurse-applications-list">
                             {appliedJobs.length > 0 ? (
                                 <ul className="application-list">
-                                    {appliedJobs.map((job) => (
+                                    {appliedJobs.filter(job => !job.hired).map((job) => (
                                         <li
                                             key={job.id}
                                             className="application-item"

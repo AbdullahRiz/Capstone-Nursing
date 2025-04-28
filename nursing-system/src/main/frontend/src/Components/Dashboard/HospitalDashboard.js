@@ -209,11 +209,11 @@ const HospitalDashboard = ({ isLoggedIn, setIsLoggedIn }) => {
 
                 <div className="dashboard-content">
                     <div className="dashboard-section">
-                        <h3>Job Applications ({jobApplications.length})</h3>
+                        <h3>Job Applications ({jobApplications.filter(app => !app.hired).length})</h3>
                         <div className="applications-list">
                             {jobApplications.length > 0 ? (
                                 <ul className="application-list">
-                                    {jobApplications.map((application) => (
+                                    {jobApplications.filter(application => !application.hired).map((application) => (
                                         <li 
                                             key={application.id} 
                                             className="application-item"
