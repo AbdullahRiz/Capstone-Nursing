@@ -13,13 +13,59 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
-    /*align-items: center;*/
     justify-content: space-between;
+    height: 350px; /* Increased height to accommodate buttons */
+    width: 100%;
+    overflow: hidden; /* Prevent content from overflowing */
+}
+
+.card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.card-button-container {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.hired-badge {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.card-description {
+    margin: 10px 0;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.card-description p {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.application-details {
+    margin-top: auto; /* Push to bottom when description is short */
 }
 
 .application-card button {
-    margin-top: 30px; /* pushes button to the bottom if you want a full separation */
-    align-self: center; /* optional: center it horizontally */
+    margin-top: 15px;
+    align-self: center;
 }
 
 .application-card:hover {
@@ -28,10 +74,11 @@
 }
 
 .application-card h3 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: bold;
     margin-bottom: 10px;
     color: #333;
+    max-width: 80%; /* Prevent long titles from pushing badge off screen */
 }
 
 .application-details p {
@@ -40,9 +87,9 @@
     margin-bottom: 5px;
 }
 
-/* From Uiverse.io by barisdogansutcu */
+/* Button styling */
 .hire {
-    padding: 17px 40px;
+    padding: 12px 30px;
     border-radius: 50px;
     cursor: pointer;
     border: 0;
@@ -50,22 +97,37 @@
     box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    font-size: 15px;
-    transition: all 0.5s ease;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+    width: 80%;
+    max-width: 200px;
+    align-self: center;
 }
 
 .hire:hover {
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     background-color: hsl(201, 100%, 50%);
     color: hsl(0, 0%, 100%);
     box-shadow: rgb(0, 174, 182) 0px 7px 29px 0px;
 }
 
 .hire:active {
-    letter-spacing: 3px;
     background-color: hsl(201, 100%, 50%);
     color: hsl(0, 0%, 100%);
     box-shadow: rgb(0, 174, 182) 0px 7px 29px 0px;
-    transform: translateY(10px);
+    transform: translateY(5px);
     transition: 100ms;
+}
+
+.hire.disabled {
+    background-color: #e0e0e0;
+    color: #666;
+    cursor: default;
+}
+
+.hire.disabled:hover {
+    letter-spacing: 1.5px;
+    background-color: #e0e0e0;
+    box-shadow: none;
 }

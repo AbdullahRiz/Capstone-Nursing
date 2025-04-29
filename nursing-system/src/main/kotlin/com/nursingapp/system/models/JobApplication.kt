@@ -21,7 +21,8 @@ data class JobApplication(
     var endDate: Instant? = null,
     var minPay: Double? = 0.0,
     var maxPay: Double? = 0.0,
-    var contractFileName: String? = null
+    var contractFileName: String? = null,
+    var hired: Boolean = false // Indicates if the job has a hired applicant
 )
 
 enum class VisibilityStatus {

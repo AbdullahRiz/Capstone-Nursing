@@ -5,6 +5,7 @@ import "./JobListDashboard.css";
 import JobApplicationCard from "../Job/JobApplicationCard";
 import Footer from "../Footer/Footer";
 import {useNavigate} from "react-router-dom";
+import { FaSearch } from "react-icons/fa";
 
 const JobListDashboard = () => {
     const navigate = useNavigate()
@@ -15,6 +16,7 @@ const JobListDashboard = () => {
     const [error, setError] = useState(null);
     const [locations, setLocations] = useState([]);
 
+    const [searchTerm, setSearchTerm] = useState("");
     const [filters, setFilters] = useState({
         skillSet: "",
         minimumHours: "",
@@ -35,6 +37,11 @@ const JobListDashboard = () => {
         const nurseSkills = user.nurseDetails.skillSet.map(skill => skill.toLowerCase());
 
         return jobApplications.filter((application) => {
+            // Skip jobs that have hired applicants
+            if (application.hired || application.applicants?.some(applicant => applicant.isHired)) {
+                return false;
+            }
+            
             if (!application.requiredSkills || application.requiredSkills.length === 0) {
                 return false;
             }
@@ -45,6 +52,15 @@ const JobListDashboard = () => {
 
             return matchPercentage >= 30; // Only recommend if >= 30% match
         });
+    };
+
+    // Filter jobs based on search term
+    const filterJobsBySearchTerm = (jobs) => {
+        if (!searchTerm.trim()) return jobs;
+        
+        return jobs.filter(job => 
+            job.jobTitle?.toLowerCase().includes(searchTerm.toLowerCase())
+        );
     };
 
 
@@ -197,14 +213,26 @@ const JobListDashboard = () => {
                             <h1>Job Applications</h1>
                             <p>Hello, {user.name || "Guest"}</p>
                         </div>
+                        <div className="search-container">
+                            <div className="search-input-wrapper">
+                                <input
+                                    type="text"
+                                    placeholder="Search by job title..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="search-input"
+                                />
+                                <FaSearch className="search-icon" />
+                            </div>
+                        </div>
                     </header>
 
                     <div className="recommended-jobs-section">
-                        {getRecommendedJobs().length > 0 ? (
+                        {filterJobsBySearchTerm(getRecommendedJobs()).length > 0 ? (
                             <>
                                 <h2>Recommended for You</h2>
                                 <div className="applications-grid">
-                                    {getRecommendedJobs().map((application) => {
+                                    {filterJobsBySearchTerm(getRecommendedJobs()).map((application) => {
                                         const updatedAt = application.updatedAt
                                             ? format(new Date(application.updatedAt), "MM/dd/yyyy")
                                             : "No last update available";
@@ -221,6 +249,7 @@ const JobListDashboard = () => {
                                                 updatedAt={updatedAt}
                                                 targetDate={targetDate}
                                                 title={application.jobTitle}
+                                                description={application.description}
                                                 isHired={application.applicants?.some(applicant => applicant.isHired)}
                                                 userRole={user.role}
                                             />
@@ -244,28 +273,38 @@ const JobListDashboard = () => {
                         <h2>All Job Applications</h2>
                         <div className="applications-grid">
                             {jobApplications.length > 0 ? (
-                                jobApplications.map((application) => {
-                                    const updatedAt = application.updatedAt
-                                        ? format(new Date(application.updatedAt), "MM/dd/yyyy")
-                                        : "No last update available";
+                                filterJobsBySearchTerm(jobApplications)
+                                    .filter(application => {
+                                        // For nurses, don't show hired jobs
+                                        if (user.role === "NURSE" && (application.hired || application.applicants?.some(applicant => applicant.isHired))) {
+                                            return false;
+                                        }
+                                        // For hospitals, show all jobs
+                                        return !application.hired;
+                                    })
+                                    .map((application) => {
+                                        const updatedAt = application.updatedAt
+                                            ? format(new Date(application.updatedAt), "MM/dd/yyyy")
+                                            : "No last update available";
 
-                                    const targetDate = application.hiringGoal?.targetDate
-                                        ? format(new Date(application.hiringGoal.targetDate), "MM/dd/yyyy")
-                                        : "No target date set";
+                                        const targetDate = application.hiringGoal?.targetDate
+                                            ? format(new Date(application.hiringGoal.targetDate), "MM/dd/yyyy")
+                                            : "No target date set";
 
-                                    return (
-                                        <JobApplicationCard
-                                            key={application.id}
-                                            id={application.id}
-                                            applicants={application.applicants.length}
-                                            updatedAt={updatedAt}
-                                            targetDate={targetDate}
-                                            title={application.jobTitle}
-                                            isHired={application.applicants?.some(applicant => applicant.isHired)}
-                                            userRole={user.role}
-                                        />
-                                    );
-                                })
+                                        return (
+                                            <JobApplicationCard
+                                                key={application.id}
+                                                id={application.id}
+                                                applicants={application.applicants.length}
+                                                updatedAt={updatedAt}
+                                                targetDate={targetDate}
+                                                title={application.jobTitle}
+                                                description={application.description}
+                                                isHired={application.applicants?.some(applicant => applicant.isHired)}
+                                                userRole={user.role}
+                                            />
+                                        );
+                                    })
                             ) : (
                                 <p>No job applications found.</p>
                             )}

@@ -66,7 +66,7 @@ class HospitalController(
             val applicant = jobApplication.applicants.find { it.applicantId == nurseToHire.id }
                 ?: return ResponseEntity.status(400).body(HireResponse("Nurse is not an applicant for this job"))
             
-            // Update the job application to mark the applicant as hired
+            // Update the job application to mark the applicant as hired and set the job's hired field to true
             jobApplicationService.updateApplicantHiredStatus(hireRequest.jobApplicationId, nurseToHire.id!!, true)
             
             // Update the nurse's user record to add this job to their hired jobs
