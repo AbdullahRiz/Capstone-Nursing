@@ -35,7 +35,7 @@ const DashboardRedirect = () => {
                     return;
                 }
                 
-                const response = await fetch("http://localhost:8080/api/getUserDetails", {
+                const response = await fetch("/api/getUserDetails", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",

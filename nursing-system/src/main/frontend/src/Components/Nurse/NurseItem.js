@@ -24,7 +24,7 @@ const NurseItem = ({ nurse, job }) => {
 
     const handlePayClick = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/create-checkout-session", {
+            const response = await fetch("/api/create-checkout-session", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -84,7 +84,7 @@ const NurseItem = ({ nurse, job }) => {
 
     const handleContractDownload = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/contracts/CS5764_Project1.pdf", {
+            const response = await fetch("/api/contracts/CS5764_Project1.pdf", {
                 headers: {
                     "Authorization": "Bearer " + localStorage.getItem("jwtToken")
                 },
