@@ -43,7 +43,7 @@ const Dummy = ({ isLoggedIn, setIsLoggedIn }) => {
     };
 
     const checkout = async () => {
-        const response = await fetch("http://localhost:8080/api/create-checkout-session", {
+        const response = await fetch("/api/create-checkout-session", {
               method: "POST",
               headers: {
               "Content-Type": "application/json",

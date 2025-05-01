@@ -26,7 +26,7 @@ const ProtectedRoute = ({ children }) => {
         }
         
         // Verify the token is valid by making a request to the API
-        const response = await fetch('http://localhost:8080/api/getUserDetails', {
+        const response = await fetch('/api/getUserDetails', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
